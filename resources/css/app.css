@@ -5,7 +5,220 @@
 @source '../**/*.blade.php';
 @source '../**/*.js';
 
+/* ------------------------------------------------------------------ */
+/* Design tokens — Flat Design Corporativo (see design.md)            */
+/* ------------------------------------------------------------------ */
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+    --font-sans: 'Lato', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-display: 'Lato', ui-sans-serif, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+    --color-primary: #007bff;
+    --color-primary-dark: #0071eb;
+    --color-secondary: #343a40;
+    --color-neutral: #f8f9fa;
+    --color-surface: #28a745;
+    --color-surface-dark: #259a40;
+    --color-accent: #ffc107;
+    --color-accent-ink: #8a6d00;
+    --color-surface-ink: #1e7e34;
+    --color-info: #17a2b8;
+    --color-info-ink: #117a8b;
+    --color-danger: #dc3545;
+    --color-line: #e4e7eb;
+
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+
+    --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.06);
+    --shadow-lift: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ------------------------------------------------------------------ */
+/* Base                                                               */
+/* ------------------------------------------------------------------ */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        @apply bg-white text-secondary font-sans antialiased;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4 {
+        @apply font-display font-bold text-secondary;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+    }
+
+    :focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+
+    section[id] {
+        scroll-margin-top: 5.5rem;
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Components                                                         */
+/* ------------------------------------------------------------------ */
+@layer components {
+    .container-page {
+        @apply mx-auto w-full max-w-[1280px] px-6;
+    }
+
+    .section-gap {
+        padding-top: clamp(4rem, 8vw, 8rem);
+        padding-bottom: clamp(4rem, 8vw, 8rem);
+    }
+
+    .btn {
+        @apply inline-flex items-center justify-center gap-2 rounded-sm px-5 py-3 text-base font-semibold
+            leading-none transition duration-200 ease-out;
+    }
+
+    .btn-primary {
+        @apply bg-primary text-white;
+    }
+
+    .btn-primary:hover {
+        background-color: var(--color-primary-dark);
+        transform: scale(1.03);
+        box-shadow: var(--shadow-lift);
+    }
+
+    .btn-primary:active {
+        transform: translateY(-1px) scale(1.03);
+    }
+
+    .btn-whatsapp {
+        @apply bg-surface text-white;
+    }
+
+    .btn-whatsapp:hover {
+        background-color: var(--color-surface-dark);
+        transform: scale(1.03);
+        box-shadow: var(--shadow-lift);
+    }
+
+    .btn-whatsapp:active {
+        transform: translateY(-1px) scale(1.03);
+    }
+
+    .btn-inverse {
+        @apply bg-white text-primary;
+    }
+
+    .btn-inverse:hover {
+        transform: scale(1.03);
+        box-shadow: var(--shadow-lift);
+    }
+
+    .btn-inverse:active {
+        transform: translateY(-1px) scale(1.03);
+    }
+
+    .btn-ghost {
+        @apply bg-transparent text-primary;
+        border: 1.5px solid rgba(52, 58, 64, 0.25);
+    }
+
+    .btn-ghost:hover {
+        @apply bg-primary/5;
+    }
+
+    .card {
+        @apply rounded-sm border border-line bg-white p-6;
+        box-shadow: var(--shadow-card);
+    }
+
+    .badge {
+        @apply inline-flex items-center gap-1.5 rounded-sm px-3 py-1 text-sm font-medium;
+    }
+
+    .label {
+        @apply mb-1.5 block text-sm font-medium text-secondary;
+        letter-spacing: 0.01em;
+    }
+
+    .input {
+        @apply w-full rounded-sm border border-line bg-white px-3.5 py-3 text-base text-secondary
+            transition placeholder:text-secondary/60;
+    }
+
+    .input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.35);
+    }
+
+    .field-error {
+        @apply mt-1 block text-sm text-danger;
+    }
+
+    .nav-link {
+        @apply rounded-sm px-3 py-2 text-base font-medium text-secondary/80 transition hover:text-primary
+            hover:bg-primary/5;
+    }
+
+    .nav-link-active {
+        @apply text-primary;
+        box-shadow: inset 0 -2px 0 var(--color-primary);
+    }
+}
+
+/* ------------------------------------------------------------------ */
+/* Utilities — entry animations                                       */
+/* ------------------------------------------------------------------ */
+@layer utilities {
+    .reveal {
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity 480ms ease-out, transform 480ms ease-out;
+        will-change: opacity, transform;
+    }
+
+    .reveal.is-visible {
+        opacity: 1;
+        transform: none;
+    }
+
+    .reveal[data-delay='1'] {
+        transition-delay: 100ms;
+    }
+    .reveal[data-delay='2'] {
+        transition-delay: 200ms;
+    }
+    .reveal[data-delay='3'] {
+        transition-delay: 300ms;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+    }
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        transition-duration: 0.001ms !important;
+    }
 }
