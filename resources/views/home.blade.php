@@ -73,34 +73,34 @@
 @section('content')
     {{-- 1. HERO --}}
     <section class="border-b border-line bg-white">
-        <div class="container-page section-gap grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
-            <div class="reveal">
+        <div class="container-page hero-gap grid items-center gap-10 sm:gap-12 lg:min-h-[min(calc(100dvh_-_7.5rem),44rem)] lg:grid-cols-2 lg:content-center lg:gap-14 xl:gap-16">
+            <div class="reveal text-center lg:text-left">
                 <span class="badge bg-primary/10 text-primary">
                     <x-icon name="banknote" class="h-4 w-4" />
                     Precios en pesos · Sin costos en dólares
                 </span>
 
-                <h1 class="mt-6 text-[clamp(2.5rem,5vw,4rem)] font-black leading-[1.06] tracking-tight">
-                    Software para talleres mecánicos: menos papeles, más vehículos entregados.
+                <h1 class="mx-auto mt-4 text-[clamp(1.8rem,3.4vw,3.25rem)] font-black leading-[1.08] tracking-tight">
+                    Menos papeles, más vehículos entregados.
                     <span class="text-primary">Tomá el control de tu taller.</span>
                 </h1>
 
-                <p class="mt-6 max-w-[72ch] text-lg leading-relaxed text-secondary/70">
+                <p class="mx-auto mt-4 max-w-[60ch] text-base leading-relaxed text-secondary/70 sm:text-lg lg:mx-0 lg:max-w-[72ch]">
                     Gestioná turnos, órdenes de trabajo, stock y presupuestos desde el celular. El sistema que te
                     devuelve horas y deja de perder presupuestos.
                 </p>
 
-                <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                    <a href="{{ $cotizar }}" class="btn btn-primary px-7 py-4 text-lg" data-cta="cotizar">
+                <div class="mt-6 flex flex-col gap-3 sm:mx-auto sm:max-w-md sm:flex-row lg:mx-0 lg:max-w-none">
+                    <a href="{{ $cotizar }}" class="btn btn-primary w-full px-7 py-3.5 text-base sm:w-auto sm:text-lg" data-cta="cotizar">
                         Cotizá y activá tu sistema hoy
                         <x-icon name="arrow-right" class="h-5 w-5" />
                     </a>
-                    <a href="{{ route('servicios') }}" class="btn btn-ghost px-7 py-4 text-lg">
+                    <a href="{{ route('servicios') }}" class="btn btn-ghost w-full px-7 py-3.5 text-base sm:w-auto sm:text-lg">
                         Ver los módulos
                     </a>
                 </div>
 
-                <ul class="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium text-secondary/70">
+                <ul class="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm font-medium text-secondary/70 lg:justify-start">
                     <li class="flex items-center gap-2">
                         <x-icon name="check" class="h-4 w-4 text-surface" /> Sin instalar nada
                     </li>
@@ -114,7 +114,7 @@
             </div>
 
             {{-- Mockup: dashboard de escritorio --}}
-            <div class="reveal" data-delay="1">
+            <div class="reveal mx-auto w-full max-w-[560px]" data-delay="1">
                 <div class="relative">
                     <div class="absolute -bottom-4 -top-6 inset-x-4 -z-10 rounded-lg bg-primary/5" aria-hidden="true"></div>
 
@@ -134,7 +134,7 @@
 
                         <div class="flex">
                             {{-- Sidebar --}}
-                            <aside class="hidden w-44 shrink-0 border-r border-line bg-neutral p-3 sm:block">
+                            <aside class="hidden w-40 shrink-0 border-r border-line bg-neutral p-3 sm:block xl:w-44">
                                 <div class="flex items-center gap-2 px-2 py-1">
                                     <img src="{{ asset('isotipo-128.png') }}" alt="" aria-hidden="true" width="128" height="128" decoding="async" class="h-6 w-6">
                                     <span class="text-sm font-black leading-none">Integra<span class="text-primary">Taller</span></span>
@@ -172,7 +172,7 @@
                                 </div>
 
                                 {{-- KPIs --}}
-                                <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3">
+                                <div class="mt-4 grid grid-cols-2 gap-2 xl:grid-cols-3">
                                     <div class="rounded-sm border border-line p-3">
                                         <x-icon name="car" class="h-4 w-4 text-primary" />
                                         <p class="mt-2 font-mono text-xl font-bold leading-none">7</p>
@@ -183,7 +183,7 @@
                                         <p class="mt-2 font-mono text-xl font-bold leading-none">4</p>
                                         <p class="mt-1 text-xs text-secondary/70">Presupuestos</p>
                                     </div>
-                                    <div class="col-span-2 rounded-sm border border-line p-3 sm:col-span-1">
+                                    <div class="col-span-2 rounded-sm border border-line p-3 xl:col-span-1">
                                         <x-icon name="banknote" class="h-4 w-4 text-surface" />
                                         <p class="mt-2 font-mono text-xl font-bold leading-none">$185.000</p>
                                         <p class="mt-1 text-xs text-secondary/70">Caja del día</p>
@@ -238,7 +238,75 @@
         </div>
     </section>
 
-    {{-- 2. PROBLEMA VS SOLUCIÓN --}}
+    {{-- 2. TALLERES QUE CONFÍAN EN INTEGRATALLER --}}
+    <section class="border-b border-line bg-neutral">
+        <div class="container-page py-14 sm:py-16">
+            <x-section-heading
+                eyebrow="Talleres que ya confían en nosotros"
+                title="Una herramienta pensada para talleres reales"
+                subtitle="IntegraTaller acompaña la gestión diaria de talleres y centros especializados."
+            />
+
+            <div class="mx-auto mt-10 grid max-w-5xl gap-6 md:grid-cols-2">
+                <a href="https://www.instagram.com/sciaca.ok/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="group card flex flex-col overflow-hidden p-0 transition duration-200 hover:-translate-y-1 hover:shadow-lift"
+                   aria-label="Conocé Taller Sciaca en Instagram">
+                    <div class="flex h-44 items-center justify-center bg-[#000000] p-6">
+                        <img src="{{ asset('logo sciaca.jpg') }}"
+                             alt="Logo de Taller Sciaca"
+                             width="480"
+                             height="480"
+                             loading="lazy"
+                             decoding="async"
+                             class="h-full w-full object-contain">
+                    </div>
+                    <div class="flex flex-1 items-center justify-between gap-4 border-t border-line bg-white px-5 py-4">
+                        <div>
+                            <h3 class="text-lg font-bold">Taller Sciaca</h3>
+                            <p class="mt-1 text-sm text-secondary/70">Servicio y gestión para talleres automotores</p>
+                        </div>
+                        <span class="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary">
+                            Instagram
+                            <x-icon name="instagram" class="h-5 w-5 transition-transform group-hover:scale-110" />
+                        </span>
+                    </div>
+                </a>
+
+                <a href="https://www.instagram.com/mistage.ok/"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   class="group card flex flex-col overflow-hidden p-0 transition duration-200 hover:-translate-y-1 hover:shadow-lift"
+                   aria-label="Conocé Mistage en Instagram">
+                    <div class="flex h-44 items-center justify-center bg-white p-6">
+                        <img src="{{ asset('logo mistage.png') }}"
+                             alt="Logo de Mistage Recupero de Siniestros"
+                             width="2000"
+                             height="1000"
+                             loading="lazy"
+                             decoding="async"
+                             class="h-full w-full object-contain">
+                    </div>
+                    <div class="flex flex-1 items-center justify-between gap-4 border-t border-line bg-white px-5 py-4">
+                        <div>
+                            <h3 class="text-lg font-bold">Mistage</h3>
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <span class="badge bg-primary/10 px-2.5 py-0.5 text-xs text-primary">Zona Sur</span>
+                                <span class="badge bg-primary/10 px-2.5 py-0.5 text-xs text-primary">Fisherton</span>
+                            </div>
+                        </div>
+                        <span class="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-primary">
+                            Instagram
+                            <x-icon name="instagram" class="h-5 w-5 transition-transform group-hover:scale-110" />
+                        </span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    {{-- 3. PROBLEMA VS SOLUCIÓN --}}
     <section class="border-b border-line bg-white">
         <div class="container-page section-gap">
             <x-section-heading
