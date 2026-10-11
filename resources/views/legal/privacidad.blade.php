@@ -30,18 +30,19 @@
                 <div>
                     <h2 class="text-xl font-bold text-secondary">2. Datos que recolectamos</h2>
                     <p class="mt-2">
-                        Datos de contacto que nos dejás por formulario o WhatsApp (nombre, taller, celular, consulta)
-                        y los datos que cargás dentro de la plataforma (clientes, vehículos, órdenes, repuestos y
-                        movimientos de caja).
+                        Datos de contacto que nos dejás por formulario o WhatsApp (nombre, taller, email, celular y
+                        consulta), junto con los datos que cargás dentro de la plataforma. Si solicitás recibir emails
+                        con guías y novedades, registramos tu dirección, el origen de la suscripción y cuándo la
+                        confirmaste.
                     </p>
                 </div>
 
                 <div>
                     <h2 class="text-xl font-bold text-secondary">3. Finalidad</h2>
                     <p class="mt-2">
-                        Utilizamos los datos para prestar el servicio, brindar soporte, gestionar la facturación y
-                        mejorar la plataforma. No vendemos ni cedemos datos personales a terceros con fines
-                        publicitarios.
+                        Utilizamos los datos de contacto para responder solicitudes de demo y consultas. Solo enviamos
+                        guías y novedades mensuales a quienes confirman esa suscripción; podés darte de baja desde el
+                        enlace que incluimos en los emails. No vendemos tus datos personales.
                     </p>
                 </div>
 
@@ -64,8 +65,9 @@
                 <div>
                     <h2 class="text-xl font-bold text-secondary">6. Cookies</h2>
                     <p class="mt-2">
-                        Usamos cookies necesarias para el funcionamiento del sitio y de la plataforma. Podés
-                        configurar tu navegador para bloquearlas, aunque algunas funciones podrían verse afectadas.
+                        Usamos cookies necesarias para el funcionamiento del sitio y almacenamiento local del
+                        navegador para recordar si ya te mostramos el formulario de suscripción, y evitar que aparezca
+                        repetidamente. Podés borrar esos datos desde la configuración de tu navegador.
                     </p>
                 </div>
             </div>

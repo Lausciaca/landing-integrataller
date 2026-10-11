@@ -8,8 +8,7 @@ return [
     |--------------------------------------------------------------------------
     |
     | Central configuration for the IntegraTaller marketing landing page.
-    | All primary CTAs point to the external app, where each tenant is
-    | self-managed (zero registration friction on the landing itself).
+    | The app URL points to the separate self-service cotizador.
     |
     */
 
@@ -19,7 +18,7 @@ return [
 
     'whatsapp_message' => env(
         'LANDING_WHATSAPP_MESSAGE',
-        'Hola! Quiero cotizar el sistema de gestión para mi taller.'
+        'Hola, quiero conocer IntegraTaller para mi taller.'
     ),
 
     'mercadopago_url' => env('LANDING_MERCADOPAGO_URL', 'https://www.mercadopago.com.ar'),
@@ -27,6 +26,10 @@ return [
     'site_name' => 'IntegraTaller',
 
     'og_image' => env('LANDING_OG_IMAGE', 'og-image.png'),
+
+    'demo_notification_email' => env('LANDING_DEMO_NOTIFICATION_EMAIL'),
+
+    'marketing_consent_version' => '2026-10-v1',
 
     'social' => [
         // 'https://www.instagram.com/integrataller',

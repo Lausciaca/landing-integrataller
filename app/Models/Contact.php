@@ -15,7 +15,10 @@ class Contact extends Model
         'name',
         'taller',
         'phone',
+        'email',
         'message',
         'status',
+        'marketing_opt_in_requested',
+        'source',
     ];
 }

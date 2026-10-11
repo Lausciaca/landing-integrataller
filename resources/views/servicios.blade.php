@@ -1,154 +1,63 @@
 @extends('layouts.app')
 
-@section('title', 'Software para talleres mecánicos: módulos y soporte | IntegraTaller')
-@section('meta_description', 'Módulos de software para talleres mecánicos: órdenes de trabajo, control de stock de repuestos, caja y finanzas, y avisos automáticos por WhatsApp. Soporte 24/7.')
+@section('title', 'Funciones para organizar un taller mecánico | IntegraTaller')
+@section('meta_description', 'Conocé cómo IntegraTaller ayuda a organizar turnos, órdenes de trabajo, vehículos, stock y presupuestos del taller.')
 
 @php
-    $cotizar = config('landing.app_url');
-    $whatsapp = 'https://wa.me/' . config('landing.whatsapp') . '?text=' . rawurlencode(config('landing.whatsapp_message'));
-
     $modules = [
-        [
-            'icon' => 'clipboard',
-            'title' => 'Órdenes de Trabajo',
-            'text' => 'Desde el ingreso hasta la entrega. Registrá fallas reportadas, tareas realizadas, horas de mano de obra y mecánicos asignados.',
-        ],
-        [
-            'icon' => 'package',
-            'title' => 'Control de Stock y Proveedores',
-            'text' => 'Mantené el control de tus repuestos. Alertas de bajo stock y registro de costos de lubricantes, filtros y piezas.',
-        ],
-        [
-            'icon' => 'bar-chart',
-            'title' => 'Caja y Finanzas',
-            'text' => 'Conocé exactamente cuánto entró y cuánto salió en el día. Reportes claros para entender la rentabilidad de tu negocio.',
-        ],
-        [
-            'icon' => 'bell',
-            'title' => 'Avisos Automáticos',
-            'text' => 'Mantené a tu cliente informado. Actualizaciones del estado del vehículo ("En diagnóstico", "Listo para retirar") listas para enviar por WhatsApp.',
-        ],
+        ['slug' => 'control-de-turnos', 'label' => 'Turnos y clientes', 'text' => 'Reuní la agenda del taller y el historial de cada vehículo para consultar qué se hizo antes y qué trabajo sigue.', 'detail' => 'control-de-turnos'],
+        ['slug' => 'historial-por-patente', 'label' => 'Historial por vehículo', 'text' => 'Buscá las reparaciones previas, los repuestos utilizados y los diagnósticos asociados al vehículo.', 'detail' => 'historial-por-patente'],
+        ['slug' => 'control-de-stock', 'label' => 'Stock de repuestos', 'text' => 'Registrá repuestos, aceite y filtros, y consultá lo disponible para el trabajo del taller.', 'detail' => 'control-de-stock'],
+        ['slug' => 'presupuestos-por-whatsapp', 'label' => 'Presupuestos', 'text' => 'Prepará cotizaciones con tus costos y compartilas con el cliente por WhatsApp.', 'detail' => 'presupuestos-por-whatsapp'],
     ];
 @endphp
 
 @section('content')
-    {{-- CABECERA --}}
     <section class="border-b border-line bg-neutral">
         <div class="container-page section-gap">
-            <x-section-heading
-                level="h1"
-                eyebrow="Servicios y Soporte"
-                title="Las herramientas exactas que tu taller necesita."
-                subtitle="Módulos de software para talleres mecánicos que resuelven los cuellos de botella de la mecánica."
-            />
-
-            <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-                <a href="{{ $cotizar }}" class="btn btn-primary px-7 py-4 text-lg" data-cta="cotizar">
-                    Cotizar mi sistema
-                    <x-icon name="arrow-right" class="h-5 w-5" />
-                </a>
-                <a href="{{ route('tutoriales') }}" class="btn btn-ghost px-7 py-4 text-lg">
-                    Ver tutoriales
-                </a>
-            </div>
+            <p class="section-kicker">Funciones</p>
+            <h1 class="display-title mt-5 max-w-[12ch]">El trabajo del taller, ordenado en un mismo lugar.</h1>
+            <p class="mt-6 max-w-[58ch] text-lg leading-relaxed text-secondary/75">Turnos, vehículos, órdenes y repuestos conectados con la operación diaria de tu equipo.</p>
+            <a href="{{ route('contacto') }}" class="btn btn-primary mt-8" data-cta="demo">Solicitar una demo</a>
         </div>
     </section>
 
-    {{-- GRILLA DE MÓDULOS --}}
-    <section class="border-b border-line bg-white">
+    <section class="bg-white">
         <div class="container-page section-gap">
-            <div class="grid gap-6 md:grid-cols-2">
+            <div class="border-t-2 border-secondary">
                 @foreach ($modules as $module)
-                    <article class="reveal card flex flex-col" data-delay="{{ $loop->index % 2 }}">
-                        <span class="inline-flex h-12 w-12 items-center justify-center rounded-sm bg-primary/10 text-primary">
-                            <x-icon :name="$module['icon']" class="h-6 w-6" />
-                        </span>
-                        <h2 class="mt-4 text-xl font-bold">{{ $module['title'] }}</h2>
-                        <p class="mt-2 leading-relaxed text-secondary/70">{{ $module['text'] }}</p>
+                    <article class="grid gap-5 border-b border-line py-7 sm:grid-cols-[minmax(10rem,0.55fr)_1fr_auto] sm:items-center sm:gap-8 sm:py-9">
+                        <div>
+                            <h2 class="font-display text-3xl font-semibold sm:text-4xl">{{ $module['label'] }}</h2>
+                        </div>
+                        <p class="max-w-[55ch] leading-relaxed text-secondary/75">{{ $module['text'] }}</p>
+                        <a href="{{ route('features.show', $module['detail']) }}" class="font-bold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary">Ver detalle</a>
                     </article>
                 @endforeach
             </div>
         </div>
     </section>
 
-    {{-- PROMESA DE SOPORTE --}}
-    <section class="border-b border-line bg-white">
-        <div class="container-page section-gap">
-            <div class="grid items-center gap-10 rounded-lg border border-line bg-neutral p-8 lg:grid-cols-[1.1fr_0.9fr] lg:p-12">
-                <div class="reveal">
-                    <span class="inline-flex h-12 w-12 items-center justify-center rounded-sm bg-surface text-white">
-                        <x-icon name="shield-check" class="h-6 w-6" />
-                    </span>
-                    <h2 class="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
-                        Soporte técnico que no te deja a pie.
-                    </h2>
-                    <p class="mt-4 text-lg leading-relaxed text-secondary/70">
-                        Si el sistema frena, el taller frena. Por eso te ofrecemos monitoreo 24/7, copias de
-                        seguridad automáticas y atención rápida a través de nuestro sistema de tickets y WhatsApp.
-                    </p>
-                    <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-                        <a href="{{ $whatsapp }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp px-6 py-3.5">
-                            <x-icon name="whatsapp" class="h-5 w-5" />
-                            Hablar con soporte
-                        </a>
-                        <a href="{{ route('contacto') }}" class="btn btn-ghost px-6 py-3.5">
-                            Abrir un ticket
-                        </a>
-                    </div>
-                </div>
+    <section class="border-y border-line bg-neutral">
+        <div class="container-page grid gap-8 py-12 sm:grid-cols-[1fr_auto] sm:items-center sm:py-14">
+            <div>
+                <p class="section-kicker">Para tu equipo</p>
+                <h2 class="mt-4 max-w-[18ch] font-display text-4xl font-semibold leading-none sm:text-5xl">Una vista compartida del trabajo pendiente.</h2>
+                <p class="mt-4 max-w-[58ch] leading-relaxed text-secondary/75">En la demo podés recorrer cómo se relacionan los módulos y conversar sobre las necesidades de tu taller.</p>
+            </div>
+            <a href="{{ route('contacto') }}" class="btn btn-primary" data-cta="demo">Verlo en una demo</a>
+        </div>
+    </section>
 
-                <ul class="grid gap-3">
-                    @foreach ([
-                        ['icon' => 'clock', 'label' => 'Monitoreo 24/7', 'text' => 'Vigilamos la plataforma todos los días del año.'],
-                        ['icon' => 'cloud', 'label' => 'Backups automáticos', 'text' => 'Tu información respaldada sin que tengas que hacer nada.'],
-                        ['icon' => 'ticket', 'label' => 'Atención por tickets', 'text' => 'Seguimiento ordenado de cada caso técnico.'],
-                    ] as $item)
-                        <li class="reveal flex items-start gap-4 rounded-sm border border-line bg-white p-4" data-delay="1">
-                            <span class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-sm bg-primary/10 text-primary">
-                                <x-icon :name="$item['icon']" class="h-5 w-5" />
-                            </span>
-                            <span>
-                                <span class="block font-bold">{{ $item['label'] }}</span>
-                                <span class="block text-sm leading-relaxed text-secondary/70">{{ $item['text'] }}</span>
-                            </span>
-                        </li>
-                    @endforeach
-                </ul>
+    <section class="bg-white">
+        <div class="container-page grid gap-10 py-12 md:grid-cols-2 md:items-center md:py-16">
+            <div>
+                <p class="section-kicker">Una consulta al mes</p>
+                <h2 class="mt-4 font-display text-4xl font-semibold leading-none sm:text-5xl">Ideas para hacer más claro el trabajo.</h2>
+            </div>
+            <div>
+                @include('partials.newsletter-form', ['source' => 'servicios'])
             </div>
         </div>
     </section>
-
-    {{-- CTA --}}
-    <section class="bg-secondary text-white">
-        <div class="container-page section-gap text-center">
-            <h2 class="mx-auto max-w-2xl text-3xl font-black tracking-tight text-white sm:text-4xl">
-                Todo tu taller en un solo sistema.
-            </h2>
-            <a href="{{ $cotizar }}" class="btn btn-primary mt-8 px-7 py-4 text-lg" data-cta="cotizar">
-                Cotizá y activá tu sistema hoy
-                <x-icon name="arrow-right" class="h-5 w-5" />
-            </a>
-        </div>
-    </section>
 @endsection
-
-@push('head')
-    <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'ItemList',
-            'name' => 'Módulos de software para talleres mecánicos',
-            'itemListElement' => collect($modules)->values()->map(fn ($module, $i) => [
-                '@type' => 'ListItem',
-                'position' => $i + 1,
-                'item' => [
-                    '@type' => 'Service',
-                    'name' => $module['title'],
-                    'description' => $module['text'],
-                    'provider' => ['@type' => 'Organization', 'name' => 'IntegraTaller'],
-                    'areaServed' => ['@type' => 'Country', 'name' => 'Argentina'],
-                ],
-            ])->all(),
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
-    </script>
-@endpush

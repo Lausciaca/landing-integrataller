@@ -3,81 +3,60 @@
 @section('title', $feature['title'])
 @section('meta_description', $feature['meta_description'])
 @section('canonical', route('features.show', $slug))
-@section('og_type', 'article')
 
 @php
-    $cotizar = config('landing.app_url');
-    $whatsapp = 'https://wa.me/' . config('landing.whatsapp') . '?text=' . rawurlencode(config('landing.whatsapp_message'));
     $others = collect(config('seo.features'))->except($slug);
 @endphp
 
 @section('content')
     <section class="border-b border-line bg-neutral">
         <div class="container-page section-gap">
-            <nav class="mb-6 text-sm text-secondary/70" aria-label="Migas de pan">
-                <a href="{{ route('home') }}" class="hover:text-primary">Inicio</a>
+            <nav class="mb-8 text-sm text-secondary/65" aria-label="Migas de pan">
+                <a href="{{ route('home') }}" class="underline-offset-4 hover:text-primary hover:underline">Inicio</a>
                 <span class="mx-2">/</span>
-                <a href="{{ route('features.index') }}" class="hover:text-primary">Características</a>
+                <a href="{{ route('features.index') }}" class="underline-offset-4 hover:text-primary hover:underline">Funciones</a>
                 <span class="mx-2">/</span>
-                <span class="text-secondary">{{ $feature['label'] ?? $feature['h1'] }}</span>
+                <span aria-current="page" class="text-secondary">{{ $feature['label'] ?? $feature['h1'] }}</span>
             </nav>
-
-            <x-section-heading
-                level="h1"
-                align="left"
-                eyebrow="Característica"
-                :title="$feature['h1']"
-                :subtitle="$feature['meta_description']"
-            />
-
-            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-                <a href="{{ $cotizar }}" class="btn btn-primary px-7 py-4 text-lg" data-cta="cotizar">
-                    Cotizá y activá tu sistema hoy
-                    <x-icon name="arrow-right" class="h-5 w-5" />
-                </a>
-                <a href="{{ $whatsapp }}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp px-7 py-4 text-lg">
-                    <x-icon name="whatsapp" class="h-5 w-5" />
-                    Consultar por WhatsApp
-                </a>
-            </div>
+            <p class="section-kicker">{{ $feature['label'] ?? 'Función' }}</p>
+            <h1 class="display-title mt-5 max-w-[12ch]">{{ $feature['h1'] }}</h1>
+            <p class="mt-6 max-w-[58ch] text-lg leading-relaxed text-secondary/75">{{ $feature['meta_description'] }}</p>
+            <a href="{{ route('contacto') }}" class="btn btn-primary mt-8" data-cta="demo">Solicitar una demo</a>
         </div>
     </section>
 
-    <section class="border-b border-line bg-white">
-        <div class="container-page section-gap grid gap-8 lg:grid-cols-2">
-            <div class="card">
-                <p class="text-sm font-bold uppercase tracking-[0.14em] text-danger">El problema</p>
-                <p class="mt-3 text-xl leading-snug text-secondary/70">{{ $feature['pain'] }}</p>
+    <section class="bg-white">
+        <div class="container-page grid gap-12 py-12 md:grid-cols-[0.85fr_1.15fr] md:gap-20 md:py-16">
+            <div>
+                <p class="section-kicker">El desafío</p>
+                <h2 class="mt-4 font-display text-4xl font-semibold leading-none">{{ $feature['pain'] }}</h2>
             </div>
-
-            <div class="card">
-                <p class="text-sm font-bold uppercase tracking-[0.14em] text-primary">La solución</p>
-                <p class="mt-3 leading-relaxed text-secondary/70">{{ $feature['solution'] }}</p>
-                <ul class="mt-4 space-y-2">
+            <div class="border-t-2 border-secondary pt-5">
+                <p class="section-kicker">Cómo ayuda</p>
+                <p class="mt-4 max-w-[60ch] text-lg leading-relaxed text-secondary/80">{{ $feature['solution'] }}</p>
+                <ul class="mt-7 divide-y divide-line border-y border-line">
                     @foreach ($feature['bullets'] as $bullet)
-                        <li class="flex items-center gap-2 text-secondary/80">
-                            <x-icon name="check" class="h-4 w-4 text-surface" /> {{ $bullet }}
+                        <li class="flex items-start gap-3 py-4">
+                            <span class="mt-1 text-surface"><x-icon name="check" class="h-5 w-5" /></span>
+                            <span>{{ $bullet }}</span>
                         </li>
                     @endforeach
                 </ul>
+                <a href="{{ route('contacto') }}" class="mt-7 inline-flex font-bold text-primary underline decoration-primary/30 underline-offset-4 hover:decoration-primary" data-cta="demo">Ver esta función en una demo</a>
             </div>
         </div>
     </section>
 
     @if ($others->isNotEmpty())
-        <section class="border-b border-line bg-neutral">
+        <section class="border-y border-line bg-neutral">
             <div class="container-page section-gap">
-                <h2 class="text-2xl font-bold tracking-tight">Otras características del software</h2>
-                <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                <p class="section-kicker">También podés conocer</p>
+                <h2 class="mt-4 font-display text-4xl font-semibold">Otras funciones del sistema</h2>
+                <div class="mt-7 grid gap-x-8 md:grid-cols-2">
                     @foreach ($others as $otherSlug => $other)
-                        <a href="{{ route('features.show', $otherSlug) }}"
-                           class="card group flex flex-col transition duration-200 hover:-translate-y-1 hover:border-primary/40">
-                            <h3 class="text-lg font-bold group-hover:text-primary">{{ $other['label'] ?? $other['h1'] }}</h3>
-                            <p class="mt-2 flex-1 text-sm leading-relaxed text-secondary/70">{{ $other['meta_description'] }}</p>
-                            <span class="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
-                                Ver más
-                                <x-icon name="chevron-right" class="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5" />
-                            </span>
+                        <a href="{{ route('features.show', $otherSlug) }}" class="group border-t border-secondary/25 py-5">
+                            <span class="font-display text-2xl font-semibold group-hover:text-primary">{{ $other['label'] ?? $other['h1'] }}</span>
+                            <p class="mt-2 text-sm leading-relaxed text-secondary/70">{{ $other['meta_description'] }}</p>
                         </a>
                     @endforeach
                 </div>
@@ -85,15 +64,10 @@
         </section>
     @endif
 
-    <section class="bg-primary text-white">
-        <div class="container-page section-gap text-center">
-            <h2 class="mx-auto max-w-2xl text-3xl font-black tracking-tight text-white sm:text-4xl">
-                Sumá {{ strtolower($feature['label'] ?? $feature['h1']) }} a tu taller hoy.
-            </h2>
-            <a href="{{ $cotizar }}" class="btn btn-inverse mt-8 px-7 py-4 text-lg" data-cta="cotizar">
-                Ir al Cotizador
-                <x-icon name="arrow-right" class="h-5 w-5" />
-            </a>
+    <section class="bg-primary-deep py-12 text-white sm:py-16">
+        <div class="container-page flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+            <h2 class="max-w-[15ch] font-display text-5xl font-semibold leading-none text-white sm:text-6xl">Conocé cómo funciona en tu taller.</h2>
+            <a href="{{ route('contacto') }}" class="btn btn-light shrink-0" data-cta="demo">Solicitar una demo</a>
         </div>
     </section>
 @endsection
@@ -110,14 +84,13 @@
             'url' => route('features.show', $slug),
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
     </script>
-
     <script type="application/ld+json">
         {!! json_encode([
             '@context' => 'https://schema.org',
             '@type' => 'BreadcrumbList',
             'itemListElement' => [
                 ['@type' => 'ListItem', 'position' => 1, 'name' => 'Inicio', 'item' => route('home')],
-                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Características', 'item' => route('features.index')],
+                ['@type' => 'ListItem', 'position' => 2, 'name' => 'Funciones', 'item' => route('features.index')],
                 ['@type' => 'ListItem', 'position' => 3, 'name' => $feature['label'] ?? $feature['h1'], 'item' => route('features.show', $slug)],
             ],
         ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
