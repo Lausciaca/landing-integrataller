@@ -18,7 +18,7 @@ class NewsletterController extends Controller
 
         $validated = $request->validate([
             'subscription_email' => ['required', 'email:rfc', 'max:254'],
-            'subscription_source' => ['required', 'string', 'in:home,servicios,guias,footer,popup'],
+            'subscription_source' => ['required', 'string', 'in:home,servicios,guias,footer'],
         ]);
 
         $result = $subscriptions->requestConfirmation(

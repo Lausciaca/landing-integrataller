@@ -4,8 +4,8 @@
         '@type' => 'Organization',
         'name' => config('landing.site_name', 'IntegraTaller'),
         'url' => url('/'),
-        'logo' => asset('logotipo.png'),
-        'description' => 'Software de gestión para talleres mecánicos en Argentina.',
+        'logo' => asset('brand/logo-horizontal-color-2400.png'),
+        'description' => 'Sistema de gestión para talleres mecánicos y de estética vehicular con varias sucursales. Tu taller, en orden.',
         'areaServed' => ['@type' => 'Country', 'name' => 'Argentina'],
         'contactPoint' => [[
             '@type' => 'ContactPoint',

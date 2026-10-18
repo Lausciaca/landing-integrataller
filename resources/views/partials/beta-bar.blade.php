@@ -1,10 +1,6 @@
-<div class="bg-secondary text-white">
-    <div class="container-page flex flex-wrap items-center justify-center gap-x-2.5 gap-y-1 py-2 text-center">
-        <span class="inline-flex items-center rounded-sm bg-accent px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-secondary">
-            Beta
-        </span>
-        <p class="text-sm text-white/80">
-            Acceso Beta — estamos incorporando talleres de a poco.
-        </p>
+<div class="bg-azul-800 text-white">
+    <div class="contenedor flex flex-wrap items-center justify-center gap-x-3 gap-y-1 py-2 text-center">
+        <span class="estado estado-info">Beta</span>
+        <p class="t-cuerpo-chico text-azul-100">Estamos sumando talleres de a poco.</p>
     </div>
 </div>

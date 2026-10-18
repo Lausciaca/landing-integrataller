@@ -3,6 +3,7 @@
     $source = $source ?? 'inline';
     $formId = 'newsletter-' . $source;
     $isCurrentForm = old('subscription_source') === $source;
+    $hasError = $isCurrentForm && $errors->has('subscription_email');
 @endphp
 
 <form method="POST" action="{{ route('newsletter.store') }}" class="space-y-3" data-newsletter-form>
@@ -15,23 +16,24 @@
     <label for="{{ $formId }}-email" class="sr-only">Tu email</label>
     <div class="flex flex-col gap-2 sm:flex-row">
         <input id="{{ $formId }}-email"
-               class="input min-w-0 flex-1 {{ $dark ? 'border-white/25 bg-white text-secondary' : '' }}"
+               class="campo min-w-0 flex-1 {{ $dark ? '!border-azul-700' : '' }}"
                type="email"
                name="subscription_email"
                value="{{ $isCurrentForm ? old('subscription_email') : '' }}"
                placeholder="nombre@taller.com"
                autocomplete="email"
                maxlength="254"
+               @if ($hasError) aria-invalid="true" aria-describedby="{{ $formId }}-error" @endif
                required>
-        <button type="submit" class="btn {{ $dark ? 'btn-light' : 'btn-primary' }} shrink-0">
+        <button type="submit" class="boton {{ $dark ? 'boton-claro' : 'boton-secundario' }} shrink-0">
             Recibir guías
         </button>
     </div>
-    @if ($isCurrentForm && $errors->has('subscription_email'))
-        <p class="text-sm {{ $dark ? 'text-amber-200' : 'text-danger' }}" role="alert">{{ $errors->first('subscription_email') }}</p>
+    @if ($hasError)
+        <p id="{{ $formId }}-error" class="t-cuerpo-chico {{ $dark ? 'text-white' : 'text-error' }}" role="alert">{{ $errors->first('subscription_email') }}</p>
     @endif
-    <p class="text-xs leading-relaxed {{ $dark ? 'text-white/70' : 'text-secondary/70' }}">
-        Un email mensual con guías y novedades. Confirmás la suscripción por correo y podés darte de baja cuando quieras.
-        <a href="{{ route('privacidad') }}" class="underline underline-offset-2">Privacidad</a>.
+    <p class="t-cuerpo-chico {{ $dark ? 'text-azul-100' : 'text-texto-secundario' }}">
+        Un email por mes. Podés darte de baja cuando quieras.
+        <a href="{{ route('privacidad') }}" class="underline underline-offset-2 {{ $dark ? 'hover:text-white' : 'hover:text-azul-800' }}">Privacidad</a>.
     </p>
 </form>

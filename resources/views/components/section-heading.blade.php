@@ -2,8 +2,9 @@
     'eyebrow' => null,
     'title' => null,
     'subtitle' => null,
-    'align' => 'center',
+    'align' => 'left',
     'level' => 'h2',
+    'id' => null,
 ])
 
 @php
@@ -11,19 +12,18 @@
 @endphp
 
 <div @class([
-    'max-w-3xl',
+    'max-w-[680px]',
     'mx-auto text-center' => $align === 'center',
-    'text-left' => $align === 'left',
 ])>
     @if ($eyebrow)
-        <p class="text-sm font-bold uppercase tracking-[0.14em] text-primary">{{ $eyebrow }}</p>
+        <p class="t-etiqueta">{{ $eyebrow }}</p>
     @endif
 
     @if ($title)
-        <{{ $tag }} class="mt-3 text-3xl font-bold tracking-tight sm:text-4xl">{{ $title }}</{{ $tag }}>
+        <{{ $tag }} @if ($id) id="{{ $id }}" @endif class="{{ $tag === 'h1' ? 't-display' : 't-titulo-1' }} mt-3">{{ $title }}</{{ $tag }}>
     @endif
 
     @if ($subtitle)
-        <p class="mt-4 text-lg leading-relaxed text-secondary/70">{{ $subtitle }}</p>
+        <p class="t-cuerpo-grande mt-4 text-texto-secundario">{{ $subtitle }}</p>
     @endif
 </div>

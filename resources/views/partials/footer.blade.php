@@ -1,50 +1,59 @@
 @php
     $whatsapp = 'https://wa.me/' . config('landing.whatsapp') . '?text=' . rawurlencode(config('landing.whatsapp_message'));
+    $social = array_values(array_filter((array) config('landing.social', [])));
 @endphp
 
-<footer class="bg-secondary text-white">
-    <div class="container-page grid gap-12 py-14 md:grid-cols-[1fr_1.2fr] md:py-16">
+<footer class="bg-azul-900 text-azul-100">
+    <div class="contenedor grid gap-12 py-16 md:grid-cols-[1.1fr_0.9fr_1.2fr] md:gap-10">
         <div>
-            <x-logo tone="light" />
-            <p class="mt-5 max-w-md text-sm leading-relaxed text-white/75">
-                Un lugar para cada orden, cada vehículo y cada tarea de tu taller.
-            </p>
-            <a href="{{ $whatsapp }}" target="_blank" rel="noopener noreferrer" class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-white underline decoration-white/40 underline-offset-4 hover:decoration-white">
-                <x-icon name="whatsapp" class="h-5 w-5" />
-                Consultanos por WhatsApp
-            </a>
+            <x-logo variant="negativo" class="h-9" />
+            <p class="mt-4 font-medium text-white">Tu taller, en orden.</p>
+            <p class="t-cuerpo-chico mt-3 max-w-[34ch]">Órdenes, clientes y finanzas de todas tus sucursales en un solo sistema.</p>
+            <ul class="t-cuerpo-chico mt-6 space-y-3">
+                <li>
+                    <a href="{{ $whatsapp }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-white hover:text-celeste-400">
+                        <x-icon name="whatsapp" class="h-5 w-5" />
+                        Escribinos por WhatsApp
+                    </a>
+                </li>
+                @foreach ($social as $url)
+                    <li>
+                        <a href="{{ $url }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 text-white hover:text-celeste-400">
+                            <x-icon name="{{ str_contains($url, 'instagram') ? 'instagram' : 'arrow-right' }}" class="h-5 w-5" />
+                            {{ str_contains($url, 'instagram') ? '@integrataller' : parse_url($url, PHP_URL_HOST) }}
+                        </a>
+                    </li>
+                @endforeach
+            </ul>
         </div>
 
-        <div class="grid gap-10 sm:grid-cols-2">
-            <div>
-                <h2 class="font-display text-2xl font-semibold text-white">Explorá</h2>
-                <ul class="mt-4 space-y-3 text-sm text-white/75">
-                    <li><a href="{{ route('servicios') }}" class="hover:text-white">Funciones</a></li>
-                    <li><a href="{{ route('features.index') }}" class="hover:text-white">Todas las características</a></li>
-                    <li><a href="{{ route('cities.index') }}" class="hover:text-white">Talleres por ciudad</a></li>
-                    <li><a href="{{ route('tutoriales') }}" class="hover:text-white">Guías para el taller</a></li>
-                    <li><a href="{{ route('contacto') }}" class="hover:text-white">Solicitar una demo</a></li>
-                </ul>
-            </div>
+        <div>
+            <h2 class="t-etiqueta !text-celeste-400">Explorá</h2>
+            <ul class="t-cuerpo-chico mt-4 space-y-3">
+                <li><a href="{{ route('servicios') }}" class="hover:text-white">Funciones</a></li>
+                <li><a href="{{ route('features.index') }}" class="hover:text-white">Todas las características</a></li>
+                <li><a href="{{ route('cities.index') }}" class="hover:text-white">Talleres por ciudad</a></li>
+                <li><a href="{{ route('tutoriales') }}" class="hover:text-white">Guías para el taller</a></li>
+                <li><a href="{{ route('contacto') }}" class="hover:text-white">Pedí tu demo</a></li>
+            </ul>
+        </div>
 
-            <div>
-                <h2 class="font-display text-2xl font-semibold text-white">Una idea útil por mes</h2>
-                <p class="mt-2 text-sm leading-relaxed text-white/75">Guías prácticas y novedades de IntegraTaller. Confirmás tu email antes de recibirlas.</p>
-                <div class="mt-4">
-                    @include('partials.newsletter-form', ['source' => 'footer', 'dark' => true])
-                </div>
-                <ul class="mt-6 space-y-3 text-xs text-white/65">
-                    <li><a href="{{ route('terminos') }}" class="hover:text-white">Términos</a></li>
-                    <li><a href="{{ route('privacidad') }}" class="hover:text-white">Privacidad y datos</a></li>
-                </ul>
+        <div>
+            <h2 class="t-etiqueta !text-celeste-400">Una guía por mes</h2>
+            <p class="t-cuerpo-chico mt-4">Ideas prácticas para ordenar el taller y novedades de IntegraTaller. Confirmás tu email antes de recibirlas.</p>
+            <div class="mt-4">
+                @include('partials.newsletter-form', ['source' => 'footer', 'dark' => true])
             </div>
         </div>
     </div>
 
-    <div class="border-t border-white/15">
-        <div class="container-page flex flex-col gap-2 py-5 text-xs text-white/65 sm:flex-row sm:items-center sm:justify-between">
-            <p>&copy; {{ date('Y') }} IntegraTaller.</p>
-            <p>Hecho para el trabajo real del taller.</p>
+    <div class="border-t border-azul-700">
+        <div class="contenedor t-cuerpo-chico flex flex-col gap-3 py-6 sm:flex-row sm:items-center sm:justify-between">
+            <p>&copy; {{ date('Y') }} IntegraTaller · Hecho en Argentina</p>
+            <ul class="flex gap-6">
+                <li><a href="{{ route('terminos') }}" class="hover:text-white">Términos</a></li>
+                <li><a href="{{ route('privacidad') }}" class="hover:text-white">Privacidad</a></li>
+            </ul>
         </div>
     </div>
 </footer>

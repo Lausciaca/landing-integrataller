@@ -4,23 +4,20 @@
 @section('robots', 'noindex, nofollow')
 
 @section('content')
-    <section class="min-h-[65vh] bg-neutral">
-        <div class="container-page flex min-h-[65vh] max-w-2xl flex-col justify-center py-16">
-            @if ($valid)
-                <p class="section-kicker">Preferencias de email</p>
-                <h1 class="mt-4 font-display text-5xl font-semibold leading-none sm:text-6xl">¿Querés dejar de recibir estos correos?</h1>
-                <p class="mt-5 max-w-[50ch] leading-relaxed text-secondary/75">La baja es inmediata. Vas a poder volver a suscribirte más adelante si cambiás de opinión.</p>
-                <form method="POST" action="{{ route('newsletter.unsubscribe') }}" class="mt-7">
-                    @csrf
-                    <input type="hidden" name="unsubscribe_token" value="{{ $token }}">
-                    <button type="submit" class="btn btn-secondary">Dar de baja la suscripción</button>
-                </form>
-            @else
-                <p class="section-kicker">Enlace no disponible</p>
-                <h1 class="mt-4 font-display text-5xl font-semibold leading-none sm:text-6xl">No encontramos una suscripción activa.</h1>
-                <p class="mt-5 max-w-[50ch] leading-relaxed text-secondary/75">El enlace puede haber sido usado o ya no estar vigente.</p>
-            @endif
-            <a href="{{ route('home') }}" class="mt-7 font-bold text-primary underline underline-offset-4">Volver al inicio</a>
-        </div>
-    </section>
+    @if ($valid)
+        <x-resultado eyebrow="Preferencias de email" title="¿Querés dejar de recibir estos correos?" icon="mail" tone="neutro">
+            <p class="t-cuerpo-grande mt-4 text-texto-secundario">La baja es inmediata. Si cambiás de opinión, te podés volver a suscribir.</p>
+            <form method="POST" action="{{ route('newsletter.unsubscribe') }}" class="mt-8 flex flex-col gap-3 sm:flex-row">
+                @csrf
+                <input type="hidden" name="unsubscribe_token" value="{{ $token }}">
+                <button type="submit" class="boton boton-secundario">Dar de baja la suscripción</button>
+                <a href="{{ route('home') }}" class="boton boton-terciario">Volver al inicio</a>
+            </form>
+        </x-resultado>
+    @else
+        <x-resultado eyebrow="Enlace no disponible" title="No encontramos una suscripción activa." icon="alert-circle" tone="neutro">
+            <p class="t-cuerpo-grande mt-4 text-texto-secundario">El enlace puede haberse usado o ya no estar vigente.</p>
+            <a href="{{ route('home') }}" class="boton boton-secundario mt-8">Volver al inicio</a>
+        </x-resultado>
+    @endif
 @endsection

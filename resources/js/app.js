@@ -25,69 +25,36 @@ function initStickyHeader() {
     const header = document.querySelector('[data-site-header]');
     if (!header) return;
 
-    const onScroll = () => header.classList.toggle('border-secondary/20', window.scrollY > 8);
+    const onScroll = () => header.classList.toggle('shadow-2', window.scrollY > 8);
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
 }
 
-function initNewsletterPopup() {
-    const dialog = document.querySelector('[data-newsletter-dialog]');
-    if (!dialog || typeof dialog.showModal !== 'function') return;
+function initScrollReveal() {
+    const targets = document.querySelectorAll('[data-revelar], .recorrido');
+    if (!targets.length) return;
 
-    const close = dialog.querySelector('[data-newsletter-close]');
-    const storageKey = 'integrataller-newsletter-popup-at';
-    const coolingPeriod = 14 * 24 * 60 * 60 * 1000;
-    let hasShown = false;
+    const show = (el) => el.classList.add(el.matches('.recorrido') ? 'is-activo' : 'is-visible');
 
-    if (dialog.dataset.forceOpen === 'true') {
-        hasShown = true;
-        dialog.showModal();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
+        targets.forEach(show);
         return;
     }
 
-    try {
-        const lastShown = Number(window.localStorage.getItem(storageKey) || 0);
-        if (Date.now() - lastShown < coolingPeriod) return;
-    } catch {
-        // The popup still works when storage is unavailable; it is limited to this page view.
-    }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            show(entry.target);
+            observer.unobserve(entry.target);
+        });
+    }, { threshold: 0.2 });
 
-    const show = () => {
-        if (hasShown || dialog.open) return;
-        hasShown = true;
-        try {
-            window.localStorage.setItem(storageKey, String(Date.now()));
-        } catch {
-            // Keep the interaction usable in privacy-restricted browser contexts.
-        }
-        dialog.showModal();
-    };
-
-    close?.addEventListener('click', () => dialog.close());
-    dialog.addEventListener('click', (event) => {
-        if (event.target === dialog) dialog.close();
-    });
-
-    const mobile = window.matchMedia('(max-width: 639px)').matches;
-    let timer;
-    if (!mobile) timer = window.setTimeout(show, 45000);
-
-    const onScroll = () => {
-        const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-        if (scrollable <= 0) return;
-        const threshold = mobile ? 0.78 : 0.58;
-        if (window.scrollY / scrollable >= threshold) {
-            window.removeEventListener('scroll', onScroll);
-            if (timer) window.clearTimeout(timer);
-            show();
-        }
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
+    document.documentElement.classList.add('revelar-listo');
+    targets.forEach((el) => observer.observe(el));
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initStickyHeader();
-    initNewsletterPopup();
+    initScrollReveal();
 });
