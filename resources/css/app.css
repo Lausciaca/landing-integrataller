@@ -451,6 +451,13 @@
         font-weight: 500;
     }
 
+    /* En pantallas chicas las etiquetas se acortan ("Centro") para poder agrandarlas */
+    @media (max-width: 639px) {
+        .nodos-prefijo { display: none; }
+        .nodos-titulo { font-size: 32px; }
+        .nodos-detalle { font-size: 24px; }
+    }
+
     /* Patente: elemento tipográfico del rubro */
     .patente {
         display: inline-flex;

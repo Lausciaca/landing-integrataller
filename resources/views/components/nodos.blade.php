@@ -34,8 +34,8 @@
     @foreach ($etiquetas as $i => [$titulo, $detalle])
         @php [$x, $y] = $puntas[$i]; @endphp
         <g class="nodos-etiqueta" style="--i: {{ $i }}">
-            <text x="{{ $x + 46 }}" y="{{ $y - 4 }}" class="nodos-titulo">{{ $titulo }}</text>
-            <text x="{{ $x + 46 }}" y="{{ $y + 22 }}" class="nodos-detalle">{{ $detalle }}</text>
+            <text x="{{ $x + 42 }}" y="{{ $y - 4 }}" class="nodos-titulo">@if (str_starts_with($titulo, 'Sucursal '))<tspan class="nodos-prefijo">Sucursal </tspan>{{ substr($titulo, 9) }}@else{{ $titulo }}@endif</text>
+            <text x="{{ $x + 42 }}" y="{{ $y + 24 }}" class="nodos-detalle">{{ $detalle }}</text>
         </g>
     @endforeach
 </svg>

@@ -54,7 +54,7 @@
 @section('content')
     {{-- Portada --}}
     <section class="overflow-hidden bg-azul-800 text-white">
-        <div class="contenedor grid items-center gap-10 py-16 md:py-20 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:py-28">
+        <div class="contenedor grid items-center gap-8 pb-12 pt-12 md:gap-10 md:py-20 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:py-28">
             <div>
                 <p class="t-etiqueta !text-celeste-400">Sistema de gestión para talleres</p>
                 <h1 class="t-display mt-5 !text-white">Tu taller, en orden.</h1>
@@ -65,11 +65,11 @@
                     <a href="{{ route('contacto') }}" class="boton boton-claro" data-cta="demo">Pedí tu demo</a>
                     <a href="#como-funciona" class="boton boton-borde-claro">Ver cómo funciona</a>
                 </div>
-                <p class="t-cuerpo-chico mt-10 text-azul-100">Para talleres mecánicos y de estética vehicular. Hecho en Argentina.</p>
+                <p class="t-cuerpo-chico mt-8 text-azul-100 md:mt-10">Para talleres mecánicos y de estética vehicular. Hecho en Argentina.</p>
             </div>
 
             <x-nodos animado
-                     class="mx-auto w-full max-w-[600px]"
+                     class="mx-auto w-full max-w-[600px] pr-5 sm:px-6 lg:px-0"
                      style="--nodos-base: var(--color-blanco); --nodos-acento: var(--color-celeste-400)"
                      :etiquetas="[['Sucursal Centro', 'Órdenes al día'], ['Sucursal Norte', 'Caja al día'], ['Sucursal Sur', 'Equipo en marcha']]" />
         </div>
@@ -81,7 +81,7 @@
             <p class="t-etiqueta">El día a día</p>
             <h2 id="preguntas-dueno-title" class="t-titulo-1 mt-3 max-w-[680px]">Cuando el taller crece, las preguntas se repiten.</h2>
 
-            <ul class="mt-12 border-t border-borde">
+            <ul class="mt-8 border-t border-borde md:mt-12">
                 @foreach ($questions as $question)
                     <li data-revelar class="grid gap-2 border-b border-borde py-6 md:grid-cols-[1fr_auto] md:items-baseline md:gap-10 md:py-8">
                         <p class="t-titulo-2 text-azul-800 md:!text-[34px] md:!leading-[42px]">{{ $question['q'] }}</p>
@@ -90,8 +90,8 @@
                 @endforeach
             </ul>
 
-            <div data-revelar class="mt-12 flex flex-col gap-6 rounded-xl bg-azul-50 p-8 md:flex-row md:items-center md:gap-10 md:p-12">
-                <x-logo variant="isotipo" class="h-16 w-16 shrink-0" />
+            <div data-revelar class="mt-10 flex flex-col gap-5 rounded-xl bg-azul-50 p-6 sm:p-8 md:mt-12 md:flex-row md:items-center md:gap-10 md:p-12">
+                <x-logo variant="isotipo" class="h-12 w-12 shrink-0 md:h-16 md:w-16" />
                 <div>
                     <p class="t-titulo-2 text-azul-800">Con IntegraTaller, la respuesta está en un solo lugar.</p>
                     <p class="t-cuerpo-grande mt-2 text-texto-secundario">Sin llamar a nadie, sin cuadernos, desde el celular o la computadora.</p>
@@ -154,10 +154,10 @@
                 </a>
             </div>
 
-            <div class="mt-12 grid gap-5 lg:grid-cols-6">
+            <div class="mt-10 grid gap-4 md:mt-12 md:grid-cols-2 md:gap-5 lg:grid-cols-6">
                 {{-- Sucursales: la idea central de la marca --}}
-                <article data-revelar class="relative flex min-h-[380px] flex-col overflow-hidden rounded-xl bg-azul-800 p-8 text-white md:p-10 lg:col-span-3 lg:row-span-2">
-                    <x-nodos class="pointer-events-none absolute -bottom-28 -right-24 hidden w-[420px] opacity-70 sm:block" style="--nodos-base: var(--color-azul-700)" />
+                <article data-revelar class="relative flex flex-col overflow-hidden rounded-xl bg-azul-800 p-6 pb-52 text-white sm:p-8 sm:pb-8 md:col-span-2 md:min-h-[380px] md:p-10 lg:col-span-3 lg:row-span-2">
+                    <x-nodos class="pointer-events-none absolute -bottom-24 -right-16 w-[300px] opacity-70 sm:-bottom-28 sm:-right-24 sm:w-[420px]" style="--nodos-base: var(--color-azul-700)" />
                     <div class="relative max-w-[340px]">
                         <p class="t-etiqueta !text-celeste-400">{{ $features['sucursales']['name'] }}</p>
                         <h3 class="t-titulo-1 mt-4 !text-white">Todas tus sucursales, un solo sistema.</h3>
@@ -165,7 +165,7 @@
                     </div>
                 </article>
 
-                <article data-revelar class="rounded-xl border border-borde p-8 lg:col-span-3">
+                <article data-revelar class="rounded-xl border border-borde p-6 sm:p-8 lg:col-span-3">
                     <p class="t-etiqueta">{{ $features['ordenes']['name'] }}</p>
                     <h3 class="t-titulo-3 mt-3">Cada trabajo sabe en qué está.</h3>
                     <p class="mt-2 text-texto-secundario">{{ $features['ordenes']['text'] }}</p>
@@ -177,23 +177,28 @@
                     </div>
                 </article>
 
-                <article data-revelar class="flex flex-col gap-6 rounded-xl border border-borde p-8 sm:flex-row sm:items-center sm:justify-between lg:col-span-3">
+                <article data-revelar class="flex flex-col gap-6 rounded-xl border border-borde p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8 md:flex-col md:items-start lg:col-span-3 lg:flex-row lg:items-center">
                     <div>
                         <p class="t-etiqueta">{{ $features['clientes']['name'] }}</p>
                         <h3 class="t-titulo-3 mt-3">La patente cuenta la historia.</h3>
                         <p class="mt-2 text-texto-secundario">{{ $features['clientes']['text'] }}</p>
                     </div>
-                    <div class="patente shrink-0 self-start sm:self-center" aria-hidden="true">
+                    <div class="patente shrink-0 self-start sm:self-center md:self-start lg:self-center" aria-hidden="true">
                         <span class="patente-banda">Argentina</span>
                         <span class="patente-numero">AE 482 KD</span>
                     </div>
                 </article>
 
                 @foreach (['caja', 'reportes', 'equipo'] as $key)
-                    <article data-revelar class="rounded-xl bg-gris-50 p-8 lg:col-span-2">
-                        <x-icon :name="$features[$key]['icon']" class="h-8 w-8 text-celeste-700" />
-                        <h3 class="t-titulo-3 mt-5">{{ $features[$key]['name'] }}</h3>
-                        <p class="mt-2 text-texto-secundario">{{ $features[$key]['text'] }}</p>
+                    <article data-revelar @class([
+                        'flex gap-4 rounded-xl bg-gris-50 p-6 sm:block sm:p-8 lg:col-span-2',
+                        'md:col-span-2' => $loop->last,
+                    ])>
+                        <x-icon :name="$features[$key]['icon']" class="h-7 w-7 shrink-0 text-celeste-700 sm:h-8 sm:w-8" />
+                        <div>
+                            <h3 class="t-titulo-3 sm:mt-5">{{ $features[$key]['name'] }}</h3>
+                            <p class="mt-2 text-texto-secundario">{{ $features[$key]['text'] }}</p>
+                        </div>
                     </article>
                 @endforeach
             </div>
@@ -230,22 +235,22 @@
     <section id="como-empezar" class="seccion bg-white" aria-labelledby="empezar-title">
         <div class="contenedor">
             <x-section-heading id="empezar-title" eyebrow="Cómo empezar" title="Tres pasos y tu equipo ya está trabajando." />
-            <ol class="mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
+            <ol class="mt-10 grid gap-8 md:mt-12 md:grid-cols-3 md:gap-8">
                 @foreach ($steps as $step)
-                    <li data-revelar>
-                        <div class="flex items-center gap-4" aria-hidden="true">
+                    <li data-revelar class="grid grid-cols-[auto_1fr] gap-x-5 md:block">
+                        <div class="hidden items-center gap-4 md:flex" aria-hidden="true">
                             <span class="h-4 w-4 shrink-0 rounded-full bg-celeste-500"></span>
                             @unless ($loop->last)
                                 <span class="hidden h-0.5 flex-1 bg-gris-200 md:block"></span>
                             @endunless
                         </div>
-                        <p class="t-display mt-6 text-celeste-700">0{{ $loop->iteration }}</p>
-                        <h3 class="t-titulo-3 mt-3">{{ $step['title'] }}</h3>
-                        <p class="mt-2 max-w-[34ch] text-texto-secundario">{{ $step['text'] }}</p>
+                        <p class="t-display row-span-2 min-w-[3.25rem] text-celeste-700 md:mt-6">0{{ $loop->iteration }}</p>
+                        <h3 class="t-titulo-3 self-end md:mt-3">{{ $step['title'] }}</h3>
+                        <p class="col-start-2 mt-2 max-w-[34ch] text-texto-secundario">{{ $step['text'] }}</p>
                     </li>
                 @endforeach
             </ol>
-            <a href="{{ route('contacto') }}" class="boton boton-principal mt-12" data-cta="demo">Pedí tu demo</a>
+            <a href="{{ route('contacto') }}" class="boton boton-principal mt-10 w-full sm:w-auto md:mt-12" data-cta="demo">Pedí tu demo</a>
         </div>
     </section>
 
@@ -254,7 +259,7 @@
         <div class="contenedor grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
             <div>
                 <x-section-heading id="faq-title" eyebrow="Preguntas frecuentes" title="Antes de ver el sistema." />
-                <a href="{{ config('landing.app_url') }}" class="boton boton-secundario mt-8">Calcular mi plan</a>
+                <a href="{{ config('landing.app_url') }}" class="boton boton-secundario mt-8 w-full sm:w-auto">Calcular mi plan</a>
             </div>
             <div class="space-y-3">
                 @foreach ($faqs as $faq)
@@ -282,7 +287,7 @@
             <p class="t-etiqueta !text-celeste-400">IntegraTaller</p>
             <h2 id="cierre-title" class="t-display mt-4 !text-white">Tu taller, en orden.</h2>
             <p class="t-cuerpo-grande mt-4 max-w-[36rem] text-azul-100">Todas tus sucursales, un solo sistema. Te mostramos cómo funciona con el trabajo de tu taller.</p>
-            <a href="{{ route('contacto') }}" class="boton boton-claro mt-8" data-cta="demo">Pedí tu demo</a>
+            <a href="{{ route('contacto') }}" class="boton boton-claro mt-8 w-full sm:w-auto" data-cta="demo">Pedí tu demo</a>
         </div>
     </section>
 @endsection
