@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Contact;
 use App\Models\NewsletterSubscriber;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -75,6 +76,29 @@ class LandingApiTest extends TestCase
             ->assertJsonPath('data.0.workshop', 'Taller Sur');
 
         $this->assertFalse($lastPage->json('pagination.has_more'));
+    }
+
+    public function test_sync_window_accepts_instants_in_any_timezone(): void
+    {
+        $this->assertSame('America/Argentina/Buenos_Aires', config('app.timezone'));
+        $this->travelTo(CarbonImmutable::parse('2026-10-19 18:55:00', 'America/Argentina/Buenos_Aires'));
+        Contact::create([
+            'name' => 'Persona', 'taller' => 'Taller', 'phone' => '1100000000',
+            'email' => 'persona@example.test', 'message' => 'Hola', 'source' => 'demo-form',
+        ]);
+
+        // 21:54 UTC = 18:54 en Argentina: el registro de las 18:55 queda dentro.
+        $this->withToken('test-landing-token')
+            ->getJson('/api/v1/landing/demo-requests?'.http_build_query(['updated_since' => '2026-10-19T21:54:00+00:00']))
+            ->assertOk()
+            ->assertJsonCount(1, 'data')
+            ->assertJsonPath('data.0.created_at', '2026-10-19T18:55:00-03:00');
+
+        $this->travel(10)->minutes();
+        $this->withToken('test-landing-token')
+            ->getJson('/api/v1/landing/demo-requests?'.http_build_query(['updated_since' => '2026-10-19T21:56:00+00:00']))
+            ->assertOk()
+            ->assertJsonCount(0, 'data');
     }
 
     public function test_subscriber_feed_includes_consent_states_without_secrets(): void

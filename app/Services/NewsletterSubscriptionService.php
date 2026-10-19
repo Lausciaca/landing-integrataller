@@ -11,6 +11,8 @@ use Throwable;
 
 class NewsletterSubscriptionService
 {
+    public function __construct(private readonly SaasNotifier $saas) {}
+
     public function requestConfirmation(string $email, string $source): string
     {
         $subscriber = NewsletterSubscriber::where('email', $email)->first();
@@ -33,6 +35,7 @@ class NewsletterSubscriptionService
             'unsubscribed_at' => null,
         ]);
         $subscriber->save();
+        $this->saas->notify('newsletter-subscriber.updated', $subscriber->id);
 
         try {
             Mail::to($email)->send(new ConfirmNewsletterSubscription(
@@ -82,6 +85,7 @@ class NewsletterSubscriptionService
             'unsubscribe_token_hash' => hash('sha256', $unsubscribeToken),
             'confirmed_at' => now(),
         ])->save();
+        $this->saas->notify('newsletter-subscriber.updated', $subscriber->id);
 
         return $subscriber;
     }
@@ -99,6 +103,7 @@ class NewsletterSubscriptionService
             'unsubscribe_token_hash' => null,
             'unsubscribed_at' => now(),
         ])->save();
+        $this->saas->notify('newsletter-subscriber.updated', $subscriber->id);
 
         return $subscriber;
     }

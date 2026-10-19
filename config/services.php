@@ -30,6 +30,8 @@ return [
 
     'integrataller' => [
         'api_token' => env('LANDING_API_TOKEN'),
+        // Endpoint de la app administrativa que recibe el aviso instantáneo.
+        'webhook_url' => env('LANDING_SAAS_WEBHOOK_URL'),
     ],
 
     'slack' => [

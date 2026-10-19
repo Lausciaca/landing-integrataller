@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mail\DemoRequestNotification;
 use App\Models\Contact;
 use App\Services\NewsletterSubscriptionService;
+use App\Services\SaasNotifier;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -19,7 +20,8 @@ class ContactController extends Controller
      */
     public function store(
         Request $request,
-        NewsletterSubscriptionService $newsletter
+        NewsletterSubscriptionService $newsletter,
+        SaasNotifier $saas
     ): RedirectResponse {
         if ($request->filled('website')) {
             return redirect()->route('demo.thank-you');
@@ -45,6 +47,7 @@ class ContactController extends Controller
             'marketing_opt_in_requested' => $marketingOptIn,
             'source' => 'demo-form',
         ]);
+        $saas->notify('demo-request.created', $contact->id);
 
         $notificationEmail = config('landing.demo_notification_email');
         if (is_string($notificationEmail) && $notificationEmail !== '') {

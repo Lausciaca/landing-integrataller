@@ -8,6 +8,7 @@ La app administrativa debe consultar esta landing por HTTPS. La landing conserva
 2. Generar un secreto aleatorio: `php -r 'echo bin2hex(random_bytes(32)), PHP_EOL;'`.
 3. Configurar ese valor como `LANDING_API_TOKEN` en el entorno de la landing y, con el mismo valor, como secreto del cliente en la app administrativa. No guardar el secreto en Git ni enviarlo desde JavaScript.
 4. Confirmar que la landing se sirve por HTTPS.
+5. Configurar `LANDING_SAAS_WEBHOOK_URL` con el endpoint de aviso de la app administrativa (por ejemplo `https://app.integrataller.com/webhooks/landing`) y ejecutar `php artisan config:cache`.
 
 La API queda en:
 
@@ -84,6 +85,21 @@ curl --get 'https://integrataller.com/api/v1/landing/demo-requests' \
 Al terminar todas las páginas, guardar `sync_until` como marca de agua. En la próxima sincronización pasarlo como `updated_since`; procesar los registros con *upsert* usando el `id` de la landing. Los límites son inclusivos, así que el consumidor debe tolerar registros repetidos. Guardar la marca de agua solo al completar el lote.
 
 Repetir el mismo protocolo para `/newsletter-subscribers`. Para sincronizar bajas, importar también los estados `unsubscribed` o procesar el cambio tras el `PUT`.
+
+## Aviso instantáneo a la app administrativa
+
+Para no esperar a la sincronización programada, la landing avisa a la app administrativa cada vez que:
+
+- entra una solicitud de demo (`demo-request.created`);
+- se crea, confirma o da de baja un suscriptor desde la landing (`newsletter-subscriber.updated`).
+
+El aviso es un `POST` a `LANDING_SAAS_WEBHOOK_URL` con el mismo secreto como `Authorization: Bearer <LANDING_API_TOKEN>` y este cuerpo:
+
+```json
+{ "event": "demo-request.created", "id": 123 }
+```
+
+No lleva datos personales: la app administrativa responde `202` y lee los cambios por la API incremental. El aviso se envía después de responder al visitante, con 5 segundos de timeout, y un error solo queda en el log (sin el token). Si la variable está vacía no se envía nada y la app sigue sincronizando cada 15 minutos.
 
 ## Ejemplo de baja desde la app administrativa
 

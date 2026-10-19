@@ -113,12 +113,15 @@ class LandingDataController extends Controller
             throw ValidationException::withMessages(['cursor' => 'The cursor is invalid.']);
         }
 
+        // The columns hold wall-clock times in the app timezone, so instants
+        // sent with another offset (e.g. UTC) are converted before comparing.
+        $timezone = config('app.timezone');
         $updatedSince = isset($validated['updated_since'])
-            ? CarbonImmutable::parse($validated['updated_since'])
+            ? CarbonImmutable::parse($validated['updated_since'])->setTimezone($timezone)
             : null;
         $syncUntil = isset($validated['sync_until'])
-            ? CarbonImmutable::parse($validated['sync_until'])
-            : CarbonImmutable::now();
+            ? CarbonImmutable::parse($validated['sync_until'])->setTimezone($timezone)
+            : CarbonImmutable::now($timezone);
 
         if ($updatedSince && $updatedSince->greaterThan($syncUntil)) {
             throw ValidationException::withMessages([
