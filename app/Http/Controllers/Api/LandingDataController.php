@@ -93,6 +93,7 @@ class LandingDataController extends Controller
         $events = $events->take($limit);
 
         $analytics = config('landing.analytics');
+        $lastEventAt = AnalyticsEvent::max('occurred_at');
 
         return response()->json([
             'data' => $events->map(fn (AnalyticsEvent $event) => [
@@ -108,6 +109,13 @@ class LandingDataController extends Controller
                 'limit' => $limit,
                 'has_more' => $hasMore,
                 'last_id' => $events->last()?->id ?? (int) ($validated['after_id'] ?? 0),
+            ],
+            // Lets the admin app tell "no visits" apart from "not syncing".
+            'stats' => [
+                'total' => AnalyticsEvent::count(),
+                'last_id' => AnalyticsEvent::max('id'),
+                'last_event_at' => $lastEventAt ? CarbonImmutable::parse($lastEventAt)->toIso8601String() : null,
+                'last_24h' => AnalyticsEvent::where('occurred_at', '>=', now()->subDay())->count(),
             ],
             // Which measurement tags are configured on the landing.
             'tags' => [

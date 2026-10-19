@@ -232,6 +232,8 @@ class AnalyticsTest extends TestCase
             ->assertJsonPath('pagination.has_more', true)
             ->assertJsonPath('tags.clarity', true)
             ->assertJsonPath('tags.meta_pixel', false)
+            ->assertJsonPath('stats.total', 3)
+            ->assertJsonPath('stats.last_24h', 3)
             ->assertJsonMissingPath('data.0.ip');
 
         $this->withToken('api-token')->getJson('/api/v1/landing/analytics-events?after_id='.($first->id + 1))
