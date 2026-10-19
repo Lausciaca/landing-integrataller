@@ -53,6 +53,9 @@
             <ul class="flex gap-6">
                 <li><a href="{{ route('terminos') }}" class="hover:text-white">Términos</a></li>
                 <li><a href="{{ route('privacidad') }}" class="hover:text-white">Privacidad</a></li>
+                @if (array_filter([config('landing.analytics.meta_pixel_id'), config('landing.analytics.clarity_id'), config('landing.analytics.ga4_id')]))
+                    <li><button type="button" class="hover:text-white" data-cookie-preferences>Cookies</button></li>
+                @endif
             </ul>
         </div>
     </div>

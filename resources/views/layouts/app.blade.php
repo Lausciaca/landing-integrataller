@@ -65,6 +65,8 @@
 
     @include('partials.whatsapp-float')
 
+    @include('partials.analytics')
+
     @stack('scripts')
 </body>
 </html>

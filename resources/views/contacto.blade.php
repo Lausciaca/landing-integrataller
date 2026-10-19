@@ -51,8 +51,9 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('contacto.store') }}" class="mt-6 space-y-5">
+                <form method="POST" action="{{ route('contacto.store') }}" class="mt-6 space-y-5" data-demo-form>
                     @csrf
+                    <input type="hidden" name="attribution" data-attribution>
                     <div class="absolute -left-[9999px]" aria-hidden="true">
                         <label for="website">No completes este campo</label>
                         <input id="website" name="website" type="text" tabindex="-1" autocomplete="off">

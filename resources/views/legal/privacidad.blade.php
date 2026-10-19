@@ -56,12 +56,24 @@
                     </p>
                 </div>
 
-                <div>
-                    <h2 class="t-titulo-3">6. Cookies</h2>
+                <div id="cookies">
+                    <h2 class="t-titulo-3">6. Cookies y medición</h2>
                     <p class="mt-2">
-                        Usamos cookies necesarias para el funcionamiento del sitio y almacenamiento local del
-                        navegador para recordar si ya te mostramos el formulario de suscripción, y evitar que aparezca
-                        repetidamente. Podés borrar esos datos desde la configuración de tu navegador.
+                        Usamos cookies necesarias para el funcionamiento del sitio y de los formularios. Además medimos
+                        las visitas con una herramienta propia, anónima y sin cookies: registramos qué páginas se ven,
+                        desde qué fuente o campaña se llegó y qué botones se usan, sin guardar tu dirección IP ni datos
+                        que te identifiquen.
+                    </p>
+                    <p class="mt-2">
+                        Solo si lo aceptás en el aviso de cookies, también usamos:
+                    </p>
+                    <ul class="mt-2 list-disc space-y-1 pl-5">
+                        <li><span class="font-medium">Microsoft Clarity</span>: mapas de calor y grabaciones anónimas de la navegación para mejorar el sitio.</li>
+                        <li><span class="font-medium">Google Analytics</span>: estadísticas de visitas.</li>
+                        <li><span class="font-medium">Meta (Facebook e Instagram)</span>: medir el resultado de nuestros anuncios. Si pedís una demo o te suscribís, le enviamos a Meta tu email y teléfono cifrados (hash) para atribuir la conversión.</li>
+                    </ul>
+                    <p class="mt-2">
+                        Podés cambiar tu elección cuando quieras desde el enlace «Cookies» al pie de cada página.
                     </p>
                 </div>
             </div>

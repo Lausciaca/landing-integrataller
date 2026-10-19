@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\AnalyticsEvent;
 use App\Models\Contact;
 use App\Models\NewsletterSubscriber;
 use Carbon\CarbonImmutable;
@@ -31,6 +32,17 @@ class LandingDataController extends Controller
             'status' => $contact->status,
             'marketing_opt_in_requested' => (bool) $contact->marketing_opt_in_requested,
             'source' => $contact->source,
+            'attribution' => [
+                'session_id' => $contact->session_id,
+                'landing_page' => $contact->landing_page,
+                'referrer_host' => $contact->referrer_host,
+                'utm_source' => $contact->utm_source,
+                'utm_medium' => $contact->utm_medium,
+                'utm_campaign' => $contact->utm_campaign,
+                'utm_content' => $contact->utm_content,
+                'utm_term' => $contact->utm_term,
+                'click_id' => $contact->click_id,
+            ],
             'created_at' => $contact->created_at?->toIso8601String(),
             'updated_at' => $contact->updated_at?->toIso8601String(),
         ]);
@@ -58,6 +70,52 @@ class LandingDataController extends Controller
             'unsubscribed_at' => $subscriber->unsubscribed_at?->toIso8601String(),
             'created_at' => $subscriber->created_at?->toIso8601String(),
             'updated_at' => $subscriber->updated_at?->toIso8601String(),
+        ]);
+    }
+
+    /**
+     * Analytics events are append-only, so they are read by id: pass the last
+     * id received as `after_id` until `has_more` is false.
+     */
+    public function analyticsEvents(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'after_id' => ['nullable', 'integer', 'min:0'],
+            'limit' => ['nullable', 'integer', 'between:1,1000'],
+        ]);
+        $limit = (int) ($validated['limit'] ?? 500);
+
+        $events = AnalyticsEvent::where('id', '>', (int) ($validated['after_id'] ?? 0))
+            ->orderBy('id')
+            ->limit($limit + 1)
+            ->get();
+        $hasMore = $events->count() > $limit;
+        $events = $events->take($limit);
+
+        $analytics = config('landing.analytics');
+
+        return response()->json([
+            'data' => $events->map(fn (AnalyticsEvent $event) => [
+                'id' => $event->id,
+                'occurred_at' => $event->occurred_at->toIso8601String(),
+                ...$event->only([
+                    'session_id', 'visitor_hash', 'type', 'path', 'landing_page', 'referrer_host',
+                    'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'click_id',
+                    'device', 'browser', 'os', 'label', 'value',
+                ]),
+            ])->values(),
+            'pagination' => [
+                'limit' => $limit,
+                'has_more' => $hasMore,
+                'last_id' => $events->last()?->id ?? (int) ($validated['after_id'] ?? 0),
+            ],
+            // Which measurement tags are configured on the landing.
+            'tags' => [
+                'meta_pixel' => filled($analytics['meta_pixel_id'] ?? null),
+                'meta_conversions_api' => filled($analytics['meta_pixel_id'] ?? null) && filled($analytics['meta_capi_token'] ?? null),
+                'clarity' => filled($analytics['clarity_id'] ?? null),
+                'ga4' => filled($analytics['ga4_id'] ?? null),
+            ],
         ]);
     }
 

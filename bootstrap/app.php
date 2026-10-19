@@ -12,7 +12,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Written by JavaScript (consent banner and Meta Pixel), read as plain text.
+        $middleware->encryptCookies(except: ['it_consent', '_fbp', '_fbc']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

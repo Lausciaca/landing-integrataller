@@ -20,5 +20,15 @@ class Contact extends Model
         'status',
         'marketing_opt_in_requested',
         'source',
+        'session_id',
+        'landing_page',
+        'referrer_host',
+        'utm_source',
+        'utm_medium',
+        'utm_campaign',
+        'utm_content',
+        'utm_term',
+        'click_id',
+        'meta_event_id',
     ];
 }

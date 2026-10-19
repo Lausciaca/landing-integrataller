@@ -9,6 +9,7 @@
 <form method="POST" action="{{ route('newsletter.store') }}" class="space-y-3" data-newsletter-form>
     @csrf
     <input type="hidden" name="subscription_source" value="{{ $source }}">
+    <input type="hidden" name="attribution" data-attribution>
     <div class="absolute -left-[9999px]" aria-hidden="true">
         <label for="{{ $formId }}-website">No completes este campo</label>
         <input id="{{ $formId }}-website" name="website" type="text" tabindex="-1" autocomplete="off">

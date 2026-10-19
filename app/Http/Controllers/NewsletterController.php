@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\AnalyticsRecorder;
+use App\Services\MetaConversions;
 use App\Services\NewsletterSubscriptionService;
+use App\Support\Attribution;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -10,8 +13,12 @@ use Illuminate\View\View;
 
 class NewsletterController extends Controller
 {
-    public function store(Request $request, NewsletterSubscriptionService $subscriptions): RedirectResponse
-    {
+    public function store(
+        Request $request,
+        NewsletterSubscriptionService $subscriptions,
+        AnalyticsRecorder $analytics,
+        MetaConversions $meta
+    ): RedirectResponse {
         if ($request->filled('website')) {
             return redirect()->route('newsletter.pending')->with('newsletter_result', 'confirmation_sent');
         }
@@ -19,14 +26,29 @@ class NewsletterController extends Controller
         $validated = $request->validate([
             'subscription_email' => ['required', 'email:rfc', 'max:254'],
             'subscription_source' => ['required', 'string', 'in:home,servicios,guias,footer'],
+            'attribution' => ['nullable', 'string', 'max:2000'],
         ]);
 
-        $result = $subscriptions->requestConfirmation(
-            Str::lower(trim($validated['subscription_email'])),
-            $validated['subscription_source']
-        );
+        $email = Str::lower(trim($validated['subscription_email']));
+        $result = $subscriptions->requestConfirmation($email, $validated['subscription_source']);
 
-        return redirect()->route('newsletter.pending')->with('newsletter_result', $result);
+        $redirect = redirect()->route('newsletter.pending')->with('newsletter_result', $result);
+        if ($result !== 'confirmation_sent') {
+            return $redirect;
+        }
+
+        $attribution = Attribution::fromJson($validated['attribution'] ?? null);
+        $eventId = (string) Str::uuid();
+        $analytics->record($request, 'newsletter_submit', $attribution, [
+            'path' => parse_url(url()->previous(), PHP_URL_PATH) ?: '/',
+            'label' => $validated['subscription_source'],
+        ]);
+        $meta->send($request, 'CompleteRegistration', $eventId, url()->previous(), [
+            'email' => $email,
+            'fbclid' => $attribution['fbclid'],
+        ]);
+
+        return $redirect->with('conversion', ['meta' => 'CompleteRegistration', 'ga' => 'sign_up', 'id' => $eventId]);
     }
 
     public function pending(): View

@@ -1,3 +1,5 @@
+import './analytics';
+
 function initMobileMenu() {
     const toggle = document.querySelector('[data-menu-toggle]');
     const panel = document.querySelector('[data-menu-panel]');
