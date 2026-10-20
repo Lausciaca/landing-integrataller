@@ -522,19 +522,6 @@
         opacity: 0;
         transform: translateY(16px);
     }
-
-    /* Preguntas frecuentes */
-    .pregunta summary::-webkit-details-marker {
-        display: none;
-    }
-
-    .pregunta[open] .pregunta-icono {
-        transform: rotate(180deg);
-    }
-
-    .pregunta-icono {
-        transition: transform 150ms ease;
-    }
 }
 
 /* Dibujo del isotipo en la portada */

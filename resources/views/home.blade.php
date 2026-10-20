@@ -11,19 +11,19 @@
         ['q' => '¿Quién hizo ese trabajo?', 'today' => 'Hoy: buscás en el chat.'],
     ];
 
-    $audiences = [
-        ['icon' => 'wrench', 'label' => 'Talleres mecánicos'],
-        ['icon' => 'droplets', 'label' => 'Estética vehicular'],
-        ['icon' => 'store', 'label' => 'Varias sucursales'],
-        ['icon' => 'users', 'label' => 'Equipos de 4 personas o más'],
+    // Un caso concreto: la Hilux que entra a la sucursal Norte el lunes y se va cobrada el martes
+    $journey = [
+        ['icon' => 'car', 'when' => 'Lun 08:40', 'title' => 'Ingresa el vehículo', 'text' => 'Entra por ruido al frenar. Recepción abre la orden.', 'status' => 'Ingresado', 'tone' => 'neutro'],
+        ['icon' => 'search', 'when' => 'Lun 10:15', 'title' => 'Diagnóstico y presupuesto', 'text' => 'Pastillas y discos: el presupuesto le llega al cliente.', 'status' => 'Esperando aprobación', 'tone' => 'alerta'],
+        ['icon' => 'wrench', 'when' => 'Lun 12:30', 'title' => 'Manos a la obra', 'text' => 'El cliente aprueba y Martín toma el trabajo.', 'status' => 'En proceso', 'tone' => 'info'],
+        ['icon' => 'check', 'when' => 'Mar 16:00', 'title' => 'Listo para retirar', 'text' => 'Trabajo probado. El cliente sabe que puede pasar.', 'status' => 'Listo', 'tone' => 'exito'],
+        ['icon' => 'wallet', 'when' => 'Mar 18:20', 'title' => 'Entregado y cobrado', 'text' => 'El cobro entra a la caja de Norte y la orden se cierra.', 'status' => 'Cerrado', 'tone' => 'cerrado'],
     ];
 
-    $journey = [
-        ['icon' => 'car', 'title' => 'Ingresa el vehículo', 'text' => 'Patente, cliente y lo que pide. Queda abierta la orden.', 'status' => 'Ingresado', 'tone' => 'neutro'],
-        ['icon' => 'search', 'title' => 'Diagnóstico y presupuesto', 'text' => 'Tareas, repuestos y mano de obra, listos para que el cliente apruebe.', 'status' => 'Esperando aprobación', 'tone' => 'alerta'],
-        ['icon' => 'wrench', 'title' => 'Manos a la obra', 'text' => 'Cada tarea con su responsable. Ves el avance sin ir al taller.', 'status' => 'En proceso', 'tone' => 'info'],
-        ['icon' => 'check', 'title' => 'Listo para retirar', 'text' => 'El trabajo terminado queda marcado y el cliente sabe que puede pasar.', 'status' => 'Listo', 'tone' => 'exito'],
-        ['icon' => 'wallet', 'title' => 'Entregado y cobrado', 'text' => 'El cobro entra a la caja de la sucursal y la orden se cierra.', 'status' => 'Cerrado', 'tone' => 'cerrado'],
+    $testimonial = [
+        'quote' => 'Antes, para saber en qué estaba cada auto había que preguntar en el taller. Ahora lo veo en el celular antes de llegar.',
+        'author' => 'Taller Sciaca',
+        'role' => 'Servicios para automotores',
     ];
 
     $features = [
@@ -98,43 +98,45 @@
                 </div>
             </div>
 
-            <div class="mt-12 flex flex-col gap-4 md:flex-row md:items-center md:gap-8">
-                <p class="t-etiqueta shrink-0 !text-texto-secundario">Hecho para</p>
-                <ul class="flex flex-wrap gap-3">
-                    @foreach ($audiences as $audience)
-                        <li class="inline-flex items-center gap-2 rounded-full border border-borde px-4 py-2.5 font-medium text-azul-800">
-                            <x-icon :name="$audience['icon']" class="h-5 w-5 text-celeste-700" />
-                            {{ $audience['label'] }}
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
+            <p class="mt-8 text-texto-secundario">
+                Hecho para talleres mecánicos y de estética vehicular, con una o varias sucursales y equipos de 4 personas o más.
+            </p>
         </div>
     </section>
 
     {{-- El recorrido de una orden --}}
     <section id="como-funciona" class="seccion bg-gris-50" aria-labelledby="recorrido-title">
         <div class="contenedor">
-            <x-section-heading id="recorrido-title" eyebrow="Cómo funciona" title="Del ingreso al cobro, cada auto deja su rastro." subtitle="Así viaja una orden de trabajo en IntegraTaller. En cada paso sabés en qué está y quién se ocupa." />
+            <div class="mx-auto flex max-w-[720px] flex-col items-center text-center">
+                <p class="t-etiqueta">Cómo funciona</p>
+                <div class="patente mt-5" aria-hidden="true">
+                    <span class="patente-banda">Argentina</span>
+                    <span class="patente-numero">AE 482 KD</span>
+                </div>
+                <h2 id="recorrido-title" class="t-titulo-1 mt-6">Lunes 8:40 entró. Martes 18:20 se fue cobrada.</h2>
+                <p class="t-cuerpo-grande mt-4 text-texto-secundario">En el medio, todo quedó registrado: quién la atendió, qué se aprobó y cuánto se cobró.</p>
+            </div>
 
-            <div class="recorrido relative mt-14">
-                <div class="absolute bottom-7 left-7 top-7 w-0.5 bg-gris-200 lg:hidden" aria-hidden="true">
+            <div class="recorrido relative mx-auto mt-12 max-w-[920px] md:mt-16">
+                <div class="absolute bottom-7 left-7 top-7 w-0.5 -translate-x-1/2 bg-gris-200 lg:left-1/2" aria-hidden="true">
                     <div class="recorrido-linea-progreso h-full w-full origin-top bg-azul-800"></div>
                 </div>
-                <div class="absolute left-7 right-[calc((100%_-_6rem)/5_-_28px)] top-7 hidden h-0.5 bg-gris-200 lg:block" aria-hidden="true">
-                    <div class="recorrido-linea-progreso h-full w-full origin-left bg-azul-800"></div>
-                </div>
 
-                <ol class="relative grid gap-10 lg:grid-cols-5 lg:gap-6">
+                <ol class="relative grid gap-10 lg:gap-6">
                 @foreach ($journey as $step)
-                    <li class="relative flex gap-5 lg:block">
-                        <span class="recorrido-nodo relative z-10 inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full" style="--i: {{ $loop->index }}">
+                    <li class="relative flex gap-5 lg:grid lg:grid-cols-[1fr_3.5rem_1fr] lg:items-start lg:gap-8">
+                        <span class="recorrido-nodo relative z-10 inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full lg:col-start-2 lg:row-start-1" style="--i: {{ $loop->index }}">
                             <x-icon :name="$step['icon']" class="h-6 w-6" />
                         </span>
-                        <div class="lg:mt-6">
-                            <x-estado :tipo="$step['tone']">{{ $step['status'] }}</x-estado>
-                            <h3 class="t-titulo-3 mt-3">{{ $step['title'] }}</h3>
-                            <p class="mt-2 text-texto-secundario">{{ $step['text'] }}</p>
+                        <div @class([
+                            'pt-1 lg:row-start-1 lg:pt-2',
+                            'lg:col-start-1 lg:text-right' => $loop->odd,
+                            'lg:col-start-3' => $loop->even,
+                        ])>
+                            <p class="font-medium tabular-nums text-celeste-700">{{ $step['when'] }}</p>
+                            <h3 class="t-titulo-3 mt-1">{{ $step['title'] }}</h3>
+                            <p class="mt-1 text-texto-secundario">{{ $step['text'] }}</p>
+                            <x-estado :tipo="$step['tone']" class="mt-3">{{ $step['status'] }}</x-estado>
                         </div>
                     </li>
                 @endforeach
@@ -206,22 +208,28 @@
     </section>
 
     {{-- Talleres que confían --}}
-    <section id="clientes" class="border-y border-borde bg-gris-50 py-14 md:py-16" aria-labelledby="clientes-title">
-        <div class="contenedor flex flex-col gap-10 md:flex-row md:items-center md:justify-between">
-            <div>
-                <p class="t-etiqueta">Talleres que confían</p>
-                <h2 id="clientes-title" class="t-titulo-2 mt-3">Ya trabajan con IntegraTaller.</h2>
-            </div>
-            <ul class="flex flex-wrap items-center gap-x-14 gap-y-8">
+    <section id="clientes" class="seccion border-y border-borde bg-gris-50" aria-labelledby="clientes-title">
+        <div class="contenedor grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
+            <figure data-revelar>
+                <h2 id="clientes-title" class="t-etiqueta">Talleres que confían</h2>
+                <blockquote class="mt-6 text-[22px] font-medium leading-[32px] tracking-[-0.01em] text-azul-800 before:mb-5 before:block before:text-[72px] before:font-bold before:leading-[0.6] before:text-celeste-500 before:content-['“'] md:text-[30px] md:leading-[42px]">
+                    {{ $testimonial['quote'] }}
+                </blockquote>
+                <figcaption class="mt-6 text-texto-secundario">
+                    <span class="font-bold text-azul-800">{{ $testimonial['author'] }}</span> · {{ $testimonial['role'] }}
+                </figcaption>
+            </figure>
+
+            <ul data-revelar class="rounded-xl border border-borde bg-white p-6 sm:p-8">
                 <li class="flex items-center gap-4">
-                    <img src="{{ asset('logo sciaca.jpg') }}" alt="Logo de Taller Sciaca" width="480" height="480" loading="lazy" decoding="async" class="h-20 w-20 rounded-md object-contain">
+                    <img src="{{ asset('logo sciaca.jpg') }}" alt="Logo de Taller Sciaca" width="480" height="480" loading="lazy" decoding="async" class="h-20 w-20 shrink-0 rounded-md object-contain">
                     <div>
                         <p class="font-bold text-azul-800">Taller Sciaca</p>
                         <p class="t-cuerpo-chico text-texto-secundario">Servicios para automotores</p>
                     </div>
                 </li>
-                <li class="flex items-center gap-4">
-                    <img src="{{ asset('logo mistage.png') }}" alt="Logo de Mistage" width="2000" height="1000" loading="lazy" decoding="async" class="h-20 w-40 object-contain">
+                <li class="mt-6 flex items-center gap-4 border-t border-borde pt-6">
+                    <img src="{{ asset('logo mistage.png') }}" alt="Logo de Mistage" width="2000" height="1000" loading="lazy" decoding="async" class="h-20 w-40 shrink-0 object-contain">
                     <div>
                         <p class="font-bold text-azul-800">Mistage</p>
                         <p class="t-cuerpo-chico text-texto-secundario">Recupero de siniestros</p>
@@ -256,27 +264,24 @@
 
     {{-- Preguntas frecuentes --}}
     <section id="preguntas" class="seccion bg-gris-50" aria-labelledby="faq-title">
-        <div class="contenedor grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
-            <div>
+        <div class="contenedor">
+            <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                 <x-section-heading id="faq-title" eyebrow="Preguntas frecuentes" title="Antes de ver el sistema." />
-                <a href="{{ config('landing.app_url') }}" class="boton boton-secundario mt-8 w-full sm:w-auto">Calcular mi plan</a>
+                <a href="{{ config('landing.app_url') }}" class="boton boton-secundario w-full shrink-0 sm:w-auto">Calcular mi plan</a>
             </div>
-            <div class="space-y-3">
+            <dl class="mt-10 grid gap-x-12 gap-y-8 md:mt-12 md:grid-cols-2">
                 @foreach ($faqs as $faq)
-                    <details class="pregunta rounded-lg bg-white shadow-1">
-                        <summary class="flex cursor-pointer list-none items-center justify-between gap-6 p-5 font-medium text-azul-800 sm:p-6">
-                            {{ $faq['q'] }}
-                            <x-icon name="chevron-down" class="pregunta-icono h-5 w-5 shrink-0 text-celeste-700" />
-                        </summary>
-                        <p class="max-w-[62ch] px-5 pb-5 text-texto-secundario sm:px-6 sm:pb-6">
+                    <div data-revelar class="border-t-2 border-azul-800 pt-5">
+                        <dt class="t-titulo-3 text-azul-800">{{ $faq['q'] }}</dt>
+                        <dd class="mt-2 max-w-[62ch] text-texto-secundario">
                             {{ $faq['a'] }}
                             @if (!empty($faq['cotizer']))
                                 <a href="{{ config('landing.app_url') }}" class="enlace">También podés usar el cotizador.</a>
                             @endif
-                        </p>
-                    </details>
+                        </dd>
+                    </div>
                 @endforeach
-            </div>
+            </dl>
         </div>
     </section>
 
