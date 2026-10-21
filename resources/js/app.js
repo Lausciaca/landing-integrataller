@@ -43,16 +43,17 @@ function initScrollReveal() {
         return;
     }
 
-    // Los elementos que entran en la misma tanda se escalonan; los que entran solos aparecen sin espera
+    // Los elementos que entran en la misma tanda se escalonan apenas; los que entran solos aparecen sin espera.
+    // Se revelan un poco antes de llegar a la pantalla para que al bajar rápido ya estén visibles.
     const observer = new IntersectionObserver((entries) => {
         entries
             .filter((entry) => entry.isIntersecting)
             .forEach((entry, index) => {
-                entry.target.style.setProperty('--retraso', `${Math.min(index, 5) * 90}ms`);
+                entry.target.style.setProperty('--retraso', `${Math.min(index, 3) * 50}ms`);
                 show(entry.target);
                 observer.unobserve(entry.target);
             });
-    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: 0, rootMargin: '0px 0px 15% 0px' });
 
     document.documentElement.classList.add('revelar-listo');
     targets.forEach((el) => observer.observe(el));

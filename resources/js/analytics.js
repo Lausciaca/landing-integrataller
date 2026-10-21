@@ -3,7 +3,7 @@
  *
  * 1. Analítica propia, anónima y sin cookies: eventos por beacon a /api/t que
  *    la app administrativa importa. La sesión vive en sessionStorage.
- * 2. Consentimiento: Meta Pixel, Microsoft Clarity y GA4 solo cargan después
+ * 2. Consentimiento: Meta Pixel, Microsoft Clarity, GA4 y Google Ads solo cargan después
  *    de que la persona acepta en el banner (cookie `it_consent`).
  */
 
@@ -183,22 +183,29 @@ function loadClarity(id) {
     UTM_KEYS.forEach((key) => attribution[key] && window.clarity('set', key, attribution[key]));
 }
 
-function loadGa4(id) {
-    if (window.gtag) return;
-    window.dataLayer = window.dataLayer || [];
-    window.gtag = function () {
-        window.dataLayer.push(arguments);
-    };
-    loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`);
-    window.gtag('js', new Date());
+// GA4 y Google Ads comparten gtag.js: se carga una vez y cada etiqueta se configura por su lado.
+const gtagIds = new Set();
+
+function loadGtag(id) {
+    if (gtagIds.has(id)) return;
+    if (!window.gtag) {
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () {
+            window.dataLayer.push(arguments);
+        };
+        loadScript(`https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(id)}`);
+        window.gtag('js', new Date());
+    }
+    gtagIds.add(id);
     window.gtag('config', id);
 }
 
 function applyConsent() {
     if (!consent) return;
     if (consent.analytics && tags.clarity) loadClarity(tags.clarity);
-    if (consent.analytics && tags.ga4) loadGa4(tags.ga4);
+    if (consent.analytics && tags.ga4) loadGtag(tags.ga4);
     if (consent.marketing && tags.pixel) loadPixel(tags.pixel);
+    if (consent.marketing && tags.gads) loadGtag(tags.gads);
 
     // Conversión que dejó el servidor (demo o suscripción): mismo event_id que la Conversions API.
     if (config.conversion && !config.conversion.reported) {
@@ -209,7 +216,11 @@ function applyConsent() {
 
 function reportConversion(metaEvent, gaEvent, eventId) {
     if (consent?.marketing && window.fbq && metaEvent) window.fbq('track', metaEvent, {}, { eventID: eventId });
-    if (consent?.analytics && window.gtag && gaEvent) window.gtag('event', gaEvent);
+    if (consent?.analytics && gtagIds.has(tags.ga4) && gaEvent) window.gtag('event', gaEvent, { send_to: tags.ga4 });
+    // Google Ads: solo el pedido de demo cuenta como conversión
+    if (consent?.marketing && gtagIds.has(tags.gads) && gaEvent === 'generate_lead' && config.gadsLeadLabel) {
+        window.gtag('event', 'conversion', { send_to: `${tags.gads}/${config.gadsLeadLabel}`, transaction_id: eventId });
+    }
 }
 
 function initBanner() {

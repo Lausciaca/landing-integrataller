@@ -71,6 +71,7 @@
                         <li><span class="font-medium">Microsoft Clarity</span>: mapas de calor y grabaciones anónimas de la navegación para mejorar el sitio.</li>
                         <li><span class="font-medium">Google Analytics</span>: estadísticas de visitas.</li>
                         <li><span class="font-medium">Meta (Facebook e Instagram)</span>: medir el resultado de nuestros anuncios. Si pedís una demo o te suscribís, le enviamos a Meta tu email y teléfono cifrados (hash) para atribuir la conversión.</li>
+                        <li><span class="font-medium">Google Ads</span>: saber si un anuncio de Google terminó en un pedido de demo. No le enviamos tus datos de contacto.</li>
                     </ul>
                     <p class="mt-2">
                         Podés cambiar tu elección cuando quieras desde el enlace «Cookies» al pie de cada página.

@@ -40,6 +40,9 @@ return [
         'meta_graph_version' => env('META_GRAPH_VERSION', 'v24.0'),
         'clarity_id' => env('CLARITY_PROJECT_ID'),
         'ga4_id' => env('GA4_MEASUREMENT_ID'),
+        // Google Ads: id "AW-…" and the label of the conversion action for demo requests.
+        'google_ads_id' => env('GOOGLE_ADS_ID'),
+        'google_ads_lead_label' => env('GOOGLE_ADS_LEAD_LABEL'),
         'retention_days' => 90,
     ],
 

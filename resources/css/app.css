@@ -681,7 +681,7 @@
 
     /* Entrada escalonada: con animación (no transición) para que el retraso no afecte al hover */
     .revelar-listo .funciones-grilla [data-revelar].is-visible {
-        animation: subir 600ms ease var(--retraso, 0ms) backwards;
+        animation: subir 350ms ease var(--retraso, 0ms) backwards;
     }
 
     /* El revelado genérico pisa la transición; se la devuelvo a las tarjetas */
@@ -698,14 +698,15 @@
         animation-play-state: paused;
     }
 
-    /* Revelado suave al hacer scroll (solo si hay JS y sin movimiento reducido) */
+    /* Revelado suave al hacer scroll (solo si hay JS y sin movimiento reducido).
+       Corto a propósito: al bajar rápido en el celular no tiene que quedar la pantalla en blanco */
     .revelar-listo [data-revelar] {
-        transition: opacity 600ms ease, transform 600ms ease;
+        transition: opacity 300ms ease, transform 300ms ease;
     }
 
     .revelar-listo [data-revelar]:not(.is-visible) {
         opacity: 0;
-        transform: translateY(16px);
+        transform: translateY(10px);
     }
 
     /* Lo que entra junto a la pantalla aparece escalonado (el JS asigna --retraso por tanda) */

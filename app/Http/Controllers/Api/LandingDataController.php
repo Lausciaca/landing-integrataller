@@ -124,6 +124,7 @@ class LandingDataController extends Controller
                 'meta_conversions_api' => filled($analytics['meta_pixel_id'] ?? null) && filled($analytics['meta_capi_token'] ?? null),
                 'clarity' => filled($analytics['clarity_id'] ?? null),
                 'ga4' => filled($analytics['ga4_id'] ?? null),
+                'google_ads' => filled($analytics['google_ads_id'] ?? null) && filled($analytics['google_ads_lead_label'] ?? null),
             ],
         ]);
     }

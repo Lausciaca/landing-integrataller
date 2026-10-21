@@ -219,6 +219,25 @@ class AnalyticsTest extends TestCase
             ->assertDontSee('capi', false);
     }
 
+    public function test_google_ads_conversion_is_configured_only_with_id_and_label(): void
+    {
+        config(['landing.analytics.google_ads_id' => 'AW-123456789', 'landing.analytics.google_ads_lead_label' => 'AbC-dEf_123']);
+
+        $this->get('/')->assertOk()
+            ->assertSee('"gads":"AW-123456789"', false)
+            ->assertSee('"gadsLeadLabel":"AbC-dEf_123"', false)
+            ->assertSee('data-consent="marketing"', false)
+            ->assertSee('Google Ads');
+
+        config(['services.integrataller.api_token' => 'api-token']);
+        $this->withToken('api-token')->getJson('/api/v1/landing/analytics-events')
+            ->assertJsonPath('tags.google_ads', true);
+
+        config(['landing.analytics.google_ads_lead_label' => null]);
+        $this->withToken('api-token')->getJson('/api/v1/landing/analytics-events')
+            ->assertJsonPath('tags.google_ads', false);
+    }
+
     public function test_api_lists_events_by_id_with_tag_status(): void
     {
         config(['services.integrataller.api_token' => 'api-token', 'landing.analytics.clarity_id' => 'abc123']);
@@ -235,6 +254,7 @@ class AnalyticsTest extends TestCase
             ->assertJsonPath('pagination.has_more', true)
             ->assertJsonPath('tags.clarity', true)
             ->assertJsonPath('tags.meta_pixel', false)
+            ->assertJsonPath('tags.google_ads', false)
             ->assertJsonPath('stats.total', 3)
             ->assertJsonPath('stats.last_24h', 3)
             ->assertJsonMissingPath('data.0.ip');
