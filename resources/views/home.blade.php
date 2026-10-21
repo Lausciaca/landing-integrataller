@@ -11,13 +11,13 @@
         ['q' => '¿Quién hizo ese trabajo?', 'today' => 'Hoy: buscás en el chat.'],
     ];
 
-    // Un caso concreto: la Hilux que entra a la sucursal Norte el lunes y se va cobrada el martes
+    // Un caso de ejemplo: una camioneta que entra el lunes a la sucursal Norte y se entrega el martes
     $journey = [
-        ['icon' => 'car', 'when' => 'Lun 08:40', 'title' => 'Ingresa el vehículo', 'text' => 'Entra por ruido al frenar. Recepción abre la orden.', 'status' => 'Ingresado', 'tone' => 'neutro'],
-        ['icon' => 'search', 'when' => 'Lun 10:15', 'title' => 'Diagnóstico y presupuesto', 'text' => 'Pastillas y discos: el presupuesto le llega al cliente.', 'status' => 'Esperando aprobación', 'tone' => 'alerta'],
-        ['icon' => 'wrench', 'when' => 'Lun 12:30', 'title' => 'Manos a la obra', 'text' => 'El cliente aprueba y Martín toma el trabajo.', 'status' => 'En proceso', 'tone' => 'info'],
-        ['icon' => 'check', 'when' => 'Mar 16:00', 'title' => 'Listo para retirar', 'text' => 'Trabajo probado. El cliente sabe que puede pasar.', 'status' => 'Listo', 'tone' => 'exito'],
-        ['icon' => 'wallet', 'when' => 'Mar 18:20', 'title' => 'Entregado y cobrado', 'text' => 'El cobro entra a la caja de Norte y la orden se cierra.', 'status' => 'Cerrado', 'tone' => 'cerrado'],
+        ['icon' => 'car', 'when' => 'Lunes 08:40', 'title' => 'Recepción', 'text' => 'Ingresa una Toyota Hilux por ruido al frenar. Se registran el cliente y el pedido, y la orden queda abierta.', 'status' => 'Ingresado', 'tone' => 'neutro'],
+        ['icon' => 'search', 'when' => 'Lunes 10:15', 'title' => 'Presupuesto', 'text' => 'El diagnóstico indica cambio de pastillas y discos. El presupuesto se envía al cliente para su aprobación.', 'status' => 'Esperando aprobación', 'tone' => 'alerta'],
+        ['icon' => 'wrench', 'when' => 'Lunes 12:30', 'title' => 'Trabajo en taller', 'text' => 'El cliente aprueba. La tarea queda asignada a un técnico y el avance se ve desde cualquier lugar.', 'status' => 'En proceso', 'tone' => 'info'],
+        ['icon' => 'check', 'when' => 'Martes 16:00', 'title' => 'Listo para retirar', 'text' => 'El trabajo se termina y se prueba. Se avisa al cliente que puede retirar el vehículo.', 'status' => 'Listo', 'tone' => 'exito'],
+        ['icon' => 'wallet', 'when' => 'Martes 18:20', 'title' => 'Cobro y cierre', 'text' => 'El pago ingresa a la caja de la sucursal Norte y la orden se cierra con todo su historial.', 'status' => 'Cerrado', 'tone' => 'cerrado'],
     ];
 
     $testimonial = [
@@ -55,17 +55,17 @@
     {{-- Portada --}}
     <section class="overflow-hidden bg-azul-800 text-white">
         <div class="contenedor grid items-center gap-8 pb-12 pt-12 md:gap-10 md:py-20 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:py-28">
-            <div>
-                <p class="t-etiqueta !text-celeste-400">Sistema de gestión para talleres</p>
-                <h1 class="t-display mt-5 !text-white">Tu taller, en orden.</h1>
+            <div class="portada-entrada">
+                <p class="t-etiqueta !text-celeste-400">Tu taller, en orden.</p>
+                <h1 class="t-display mt-5 max-w-[36rem] !text-white">El control de todas tus sucursales, en un solo sistema.</h1>
                 <p class="t-cuerpo-grande mt-6 max-w-[32rem] text-azul-100">
-                    Órdenes de trabajo, clientes y finanzas de todas tus sucursales en un solo sistema. Sabé qué pasa en cada taller, sin estar ahí.
+                    Órdenes de trabajo, clientes y finanzas centralizados. Sabé qué pasa en cada taller sin tener que estar ahí.
                 </p>
                 <div class="mt-9 flex flex-col gap-3 sm:flex-row">
                     <a href="{{ route('contacto') }}" class="boton boton-claro" data-cta="demo">Pedí tu demo</a>
                     <a href="#como-funciona" class="boton boton-borde-claro">Ver cómo funciona</a>
                 </div>
-                <p class="t-cuerpo-chico mt-8 text-azul-100 md:mt-10">Para talleres mecánicos y de estética vehicular. Hecho en Argentina.</p>
+                <p class="t-cuerpo-chico mt-8 text-azul-100 md:mt-10">Talleres mecánicos y de estética vehicular · En la nube · Hecho en Argentina</p>
             </div>
 
             <x-nodos animado
@@ -78,8 +78,10 @@
     {{-- Las preguntas del dueño --}}
     <section class="seccion bg-white" aria-labelledby="preguntas-dueno-title">
         <div class="contenedor">
-            <p class="t-etiqueta">El día a día</p>
-            <h2 id="preguntas-dueno-title" class="t-titulo-1 mt-3 max-w-[680px]">Cuando el taller crece, las preguntas se repiten.</h2>
+            <div data-revelar>
+                <p class="t-etiqueta">El día a día</p>
+                <h2 id="preguntas-dueno-title" class="t-titulo-1 mt-3 max-w-[680px]">Cuando el taller crece, las preguntas se repiten.</h2>
+            </div>
 
             <ul class="mt-8 border-t border-borde md:mt-12">
                 @foreach ($questions as $question)
@@ -107,29 +109,21 @@
     {{-- El recorrido de una orden --}}
     <section id="como-funciona" class="seccion bg-gris-50" aria-labelledby="recorrido-title">
         <div class="contenedor">
-            <div class="mx-auto flex max-w-[720px] flex-col items-center text-center">
-                <p class="t-etiqueta">Cómo funciona</p>
-                <div class="patente mt-5" aria-hidden="true">
-                    <span class="patente-banda">Argentina</span>
-                    <span class="patente-numero">AE 482 KD</span>
-                </div>
-                <h2 id="recorrido-title" class="t-titulo-1 mt-6">Lunes 8:40 entró. Martes 18:20 se fue cobrada.</h2>
-                <p class="t-cuerpo-grande mt-4 text-texto-secundario">En el medio, todo quedó registrado: quién la atendió, qué se aprobó y cuánto se cobró.</p>
-            </div>
+            <x-section-heading data-revelar id="recorrido-title" align="center" eyebrow="Cómo funciona" title="Cada orden, del ingreso al cobro." subtitle="Un ejemplo: una camioneta entra el lunes a la mañana a la sucursal Norte y se entrega cobrada el martes a la tarde. Cada paso queda registrado." />
 
             <div class="recorrido relative mx-auto mt-12 max-w-[920px] md:mt-16">
-                <div class="absolute bottom-7 left-7 top-7 w-0.5 -translate-x-1/2 bg-gris-200 lg:left-1/2" aria-hidden="true">
+                <div data-recorrido-pista class="absolute bottom-7 left-7 top-7 w-0.5 -translate-x-1/2 bg-gris-200 lg:left-1/2" aria-hidden="true">
                     <div class="recorrido-linea-progreso h-full w-full origin-top bg-azul-800"></div>
                 </div>
 
                 <ol class="relative grid gap-10 lg:gap-6">
                 @foreach ($journey as $step)
-                    <li class="relative flex gap-5 lg:grid lg:grid-cols-[1fr_3.5rem_1fr] lg:items-start lg:gap-8">
-                        <span class="recorrido-nodo relative z-10 inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full lg:col-start-2 lg:row-start-1" style="--i: {{ $loop->index }}">
+                    <li class="recorrido-paso relative flex gap-5 lg:grid lg:grid-cols-[1fr_3.5rem_1fr] lg:items-start lg:gap-8">
+                        <span class="recorrido-nodo relative z-10 inline-flex h-14 w-14 shrink-0 items-center justify-center rounded-full lg:col-start-2 lg:row-start-1">
                             <x-icon :name="$step['icon']" class="h-6 w-6" />
                         </span>
                         <div @class([
-                            'pt-1 lg:row-start-1 lg:pt-2',
+                            'recorrido-contenido pt-1 lg:row-start-1 lg:pt-2',
                             'lg:col-start-1 lg:text-right' => $loop->odd,
                             'lg:col-start-3' => $loop->even,
                         ])>
@@ -149,58 +143,103 @@
     <section id="funciones" class="seccion bg-white" aria-labelledby="funciones-title">
         <div class="contenedor">
             <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-                <x-section-heading id="funciones-title" eyebrow="Funciones" title="Órdenes, clientes y finanzas. Todo en un lugar." />
+                <x-section-heading data-revelar id="funciones-title" eyebrow="Funciones" title="Órdenes, clientes y finanzas. Todo en un lugar." />
                 <a href="{{ route('servicios') }}" class="boton boton-terciario shrink-0 self-start !px-0 md:self-auto">
                     Ver todas las funciones
                     <x-icon name="arrow-right" class="h-4 w-4" />
                 </a>
             </div>
 
-            <div class="mt-10 grid gap-4 md:mt-12 md:grid-cols-2 md:gap-5 lg:grid-cols-6">
+            {{-- Cada tarjeta lleva una vista de ejemplo del sistema (decorativa, con datos inventados) --}}
+            <div class="funciones-grilla mt-10 grid gap-4 md:mt-12 md:grid-cols-2 md:gap-5 lg:grid-cols-6">
                 {{-- Sucursales: la idea central de la marca --}}
-                <article data-revelar class="relative flex flex-col overflow-hidden rounded-xl bg-azul-800 p-6 pb-52 text-white sm:p-8 sm:pb-8 md:col-span-2 md:min-h-[380px] md:p-10 lg:col-span-3 lg:row-span-2">
-                    <x-nodos class="pointer-events-none absolute -bottom-24 -right-16 w-[300px] opacity-70 sm:-bottom-28 sm:-right-24 sm:w-[420px]" style="--nodos-base: var(--color-azul-700)" />
+                <article data-revelar class="funcion funcion-destacada flex flex-col overflow-hidden p-6 text-white sm:p-8 md:col-span-2 md:min-h-[380px] md:p-10 lg:col-span-3 lg:row-span-2">
+                    <x-nodos animado class="pointer-events-none absolute -bottom-24 -right-16 w-[300px] opacity-70 sm:-bottom-28 sm:-right-24 sm:w-[420px]" style="--nodos-base: var(--color-azul-700)" />
                     <div class="relative max-w-[340px]">
                         <p class="t-etiqueta !text-celeste-400">{{ $features['sucursales']['name'] }}</p>
                         <h3 class="t-titulo-1 mt-4 !text-white">Todas tus sucursales, un solo sistema.</h3>
                         <p class="t-cuerpo-grande mt-4 text-azul-100">{{ $features['sucursales']['text'] }}</p>
                     </div>
+                    <ul class="relative mt-8 grid max-w-[300px] gap-2 lg:mt-auto lg:pt-10" aria-hidden="true">
+                        @foreach ([['Centro', '12 en proceso'], ['Norte', 'Caja al día'], ['Sur', '3 por aprobar']] as [$sede, $dato])
+                            <li class="flex items-center justify-between gap-4 rounded-md border border-azul-700 bg-azul-900/70 px-4 py-3 backdrop-blur-sm">
+                                <span class="flex items-center gap-2 font-medium"><x-icon name="store" class="h-4 w-4 text-celeste-400" />{{ $sede }}</span>
+                                <span class="t-cuerpo-chico text-celeste-400">{{ $dato }}</span>
+                            </li>
+                        @endforeach
+                    </ul>
                 </article>
 
-                <article data-revelar class="rounded-xl border border-borde p-6 sm:p-8 lg:col-span-3">
+                <article data-revelar class="funcion flex flex-col p-6 sm:p-8 lg:col-span-3">
                     <p class="t-etiqueta">{{ $features['ordenes']['name'] }}</p>
                     <h3 class="t-titulo-3 mt-3">Cada trabajo sabe en qué está.</h3>
                     <p class="mt-2 text-texto-secundario">{{ $features['ordenes']['text'] }}</p>
-                    <div class="mt-6 flex flex-wrap gap-2" aria-hidden="true">
-                        <x-estado tipo="neutro">Ingresado</x-estado>
-                        <x-estado tipo="info">En proceso</x-estado>
-                        <x-estado tipo="exito">Listo</x-estado>
-                        <x-estado tipo="cerrado">Cerrado</x-estado>
+                    <div class="funcion-vista mt-6" aria-hidden="true">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="t-cuerpo-chico font-medium text-azul-800">Orden 1043 · Toyota Hilux</span>
+                            <x-estado tipo="info">En proceso</x-estado>
+                        </div>
+                        <div class="mt-3 flex gap-1">
+                            @foreach (range(1, 5) as $i)
+                                <span @class(['h-1.5 flex-1 rounded-full', 'bg-azul-800' => $i <= 3, 'bg-gris-200' => $i > 3])></span>
+                            @endforeach
+                        </div>
+                        <p class="t-cuerpo-chico mt-2 text-texto-secundario">Paso 3 de 5 · Asignada a Martín</p>
                     </div>
                 </article>
 
-                <article data-revelar class="flex flex-col gap-6 rounded-xl border border-borde p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8 md:flex-col md:items-start lg:col-span-3 lg:flex-row lg:items-center">
+                <article data-revelar class="funcion flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8 md:flex-col md:items-start lg:col-span-3 lg:flex-row lg:items-center">
                     <div>
                         <p class="t-etiqueta">{{ $features['clientes']['name'] }}</p>
                         <h3 class="t-titulo-3 mt-3">La patente cuenta la historia.</h3>
                         <p class="mt-2 text-texto-secundario">{{ $features['clientes']['text'] }}</p>
                     </div>
-                    <div class="patente shrink-0 self-start sm:self-center md:self-start lg:self-center" aria-hidden="true">
-                        <span class="patente-banda">Argentina</span>
-                        <span class="patente-numero">AE 482 KD</span>
+                    <div class="funcion-vista w-full shrink-0 sm:w-[220px] md:w-full lg:w-[220px]" aria-hidden="true">
+                        <div class="patente">
+                            <span class="patente-banda">Argentina</span>
+                            <span class="patente-numero !text-[24px] !leading-[30px]">AE 482 KD</span>
+                        </div>
+                        <ul class="t-cuerpo-chico mt-3 divide-y divide-gris-100">
+                            @foreach ([['20/10', 'Pastillas y discos'], ['12/09', 'Service 40.000 km'], ['03/06', 'Cubiertas nuevas']] as [$fecha, $trabajo])
+                                <li class="flex gap-3 py-1.5"><span class="tabular-nums text-texto-secundario">{{ $fecha }}</span>{{ $trabajo }}</li>
+                            @endforeach
+                        </ul>
                     </div>
                 </article>
 
                 @foreach (['caja', 'reportes', 'equipo'] as $key)
                     <article data-revelar @class([
-                        'flex gap-4 rounded-xl bg-gris-50 p-6 sm:block sm:p-8 lg:col-span-2',
+                        'funcion flex flex-col p-6 sm:p-8 lg:col-span-2',
                         'md:col-span-2' => $loop->last,
                     ])>
                         <x-icon :name="$features[$key]['icon']" class="h-7 w-7 shrink-0 text-celeste-700 sm:h-8 sm:w-8" />
-                        <div>
-                            <h3 class="t-titulo-3 sm:mt-5">{{ $features[$key]['name'] }}</h3>
-                            <p class="mt-2 text-texto-secundario">{{ $features[$key]['text'] }}</p>
-                        </div>
+                        <h3 class="t-titulo-3 mt-5">{{ $features[$key]['name'] }}</h3>
+                        <p class="mt-2 text-texto-secundario">{{ $features[$key]['text'] }}</p>
+
+                        <div class="mt-auto pt-6" aria-hidden="true"><div class="funcion-vista">
+                            @if ($key === 'caja')
+                                <p class="t-cuerpo-chico text-texto-secundario">Cobrado hoy · Norte</p>
+                                <p class="t-dato-grande mt-1 tabular-nums text-azul-800">$ 860.500</p>
+                            @elseif ($key === 'reportes')
+                                <ul class="grid gap-2">
+                                    @foreach ([['Centro', 100], ['Norte', 72], ['Sur', 44]] as [$sede, $ancho])
+                                        <li class="t-cuerpo-chico grid grid-cols-[3.5rem_1fr] items-center gap-3">
+                                            <span class="text-texto-secundario">{{ $sede }}</span>
+                                            <span class="funcion-barra h-3 rounded-sm bg-azul-800" style="width: {{ $ancho }}%"></span>
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <ul class="flex flex-wrap gap-2">
+                                    @foreach ([['AS', 'Dueña'], ['MR', 'Encargado'], ['CL', 'Recepción']] as [$iniciales, $rol])
+                                        <li class="t-cuerpo-chico inline-flex items-center gap-2 rounded-full bg-gris-100 py-1 pl-1 pr-3">
+                                            <span class="inline-flex h-7 w-7 items-center justify-center rounded-full bg-azul-800 text-[11px] font-bold text-white">{{ $iniciales }}</span>
+                                            {{ $rol }}
+                                        </li>
+                                    @endforeach
+                                </ul>
+                            @endif
+                        </div></div>
                     </article>
                 @endforeach
             </div>
@@ -242,7 +281,7 @@
     {{-- Cómo empezar --}}
     <section id="como-empezar" class="seccion bg-white" aria-labelledby="empezar-title">
         <div class="contenedor">
-            <x-section-heading id="empezar-title" eyebrow="Cómo empezar" title="Tres pasos y tu equipo ya está trabajando." />
+            <x-section-heading data-revelar id="empezar-title" eyebrow="Cómo empezar" title="Tres pasos y tu equipo ya está trabajando." />
             <ol class="mt-10 grid gap-8 md:mt-12 md:grid-cols-3 md:gap-8">
                 @foreach ($steps as $step)
                     <li data-revelar class="grid grid-cols-[auto_1fr] gap-x-5 md:block">
@@ -266,7 +305,7 @@
     <section id="preguntas" class="seccion bg-gris-50" aria-labelledby="faq-title">
         <div class="contenedor">
             <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
-                <x-section-heading id="faq-title" eyebrow="Preguntas frecuentes" title="Antes de ver el sistema." />
+                <x-section-heading data-revelar id="faq-title" eyebrow="Preguntas frecuentes" title="Antes de ver el sistema." />
                 <a href="{{ config('landing.app_url') }}" class="boton boton-secundario w-full shrink-0 sm:w-auto">Calcular mi plan</a>
             </div>
             <dl class="mt-10 grid gap-x-12 gap-y-8 md:mt-12 md:grid-cols-2">
@@ -288,7 +327,7 @@
     {{-- Cierre --}}
     <section class="relative overflow-hidden bg-azul-800 text-white" aria-labelledby="cierre-title">
         <x-nodos class="pointer-events-none absolute -right-20 top-1/2 hidden w-[460px] -translate-y-1/2 md:block" style="--nodos-base: var(--color-azul-700)" />
-        <div class="contenedor relative py-16 md:py-24">
+        <div data-revelar class="contenedor relative py-16 md:py-24">
             <p class="t-etiqueta !text-celeste-400">IntegraTaller</p>
             <h2 id="cierre-title" class="t-display mt-4 !text-white">Tu taller, en orden.</h2>
             <p class="t-cuerpo-grande mt-4 max-w-[36rem] text-azul-100">Todas tus sucursales, un solo sistema. Te mostramos cómo funciona con el trabajo de tu taller.</p>

@@ -490,27 +490,117 @@
         white-space: nowrap;
     }
 
-    /* Recorrido de una orden: la línea y los nodos se encienden al llegar */
+    /*
+     * Recorrido de una orden: la línea avanza con el scroll y cada paso se enciende cuando la línea lo alcanza.
+     * Sin JS (o con movimiento reducido) todo queda encendido; el estado apagado solo existe con .is-dinamico.
+     */
     .recorrido-nodo {
-        border: 2px solid var(--color-gris-200);
-        background: var(--color-blanco);
-        color: var(--color-gris-600);
-        transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease;
-        transition-delay: calc(var(--i, 0) * 180ms);
+        border: 2px solid var(--color-azul-800);
+        background: var(--color-azul-800);
+        color: var(--color-blanco);
+        transition: background-color 300ms ease, border-color 300ms ease, color 300ms ease, transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 
     .recorrido-linea-progreso {
-        transition: transform 1100ms ease;
+        transform: scaleY(var(--progreso, 1));
     }
 
-    .recorrido.is-activo .recorrido-nodo {
-        border-color: var(--color-azul-800);
-        background: var(--color-azul-800);
-        color: var(--color-blanco);
+    .recorrido.is-dinamico .recorrido-paso:not(.is-activo) .recorrido-nodo {
+        border-color: var(--color-gris-200);
+        background: var(--color-blanco);
+        color: var(--color-gris-400);
+        transform: scale(0.85);
     }
 
-    .recorrido:not(.is-activo) .recorrido-linea-progreso {
-        transform: scale(0);
+    .recorrido.is-dinamico .recorrido-contenido {
+        transition: opacity 500ms ease, transform 500ms ease;
+    }
+
+    .recorrido.is-dinamico .recorrido-paso:not(.is-activo) .recorrido-contenido {
+        opacity: 0.35;
+        transform: translateY(12px);
+    }
+
+    /* En escritorio cada paso entra desde su lado de la línea */
+    @media (min-width: 1024px) {
+        .recorrido.is-dinamico .recorrido-paso:nth-child(odd):not(.is-activo) .recorrido-contenido {
+            transform: translateX(-16px);
+        }
+
+        .recorrido.is-dinamico .recorrido-paso:nth-child(even):not(.is-activo) .recorrido-contenido {
+            transform: translateX(16px);
+        }
+    }
+
+    .recorrido.is-dinamico .recorrido-paso.is-activo .recorrido-nodo {
+        animation: encender 700ms ease-out;
+    }
+
+    .recorrido.is-dinamico .recorrido-paso.is-activo .estado {
+        animation: brotar 400ms cubic-bezier(0.34, 1.56, 0.64, 1) 150ms both;
+    }
+
+    /* Funciones: tarjetas con relieve que se elevan al pasar el mouse */
+    .funcion {
+        position: relative;
+        border: 1px solid var(--color-borde);
+        border-radius: var(--radius-xl);
+        background: linear-gradient(180deg, var(--color-blanco) 0%, var(--color-gris-50) 100%);
+        box-shadow: var(--shadow-1);
+        transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+    }
+
+    .funcion:hover {
+        transform: translateY(-4px);
+        border-color: var(--color-azul-100);
+        box-shadow: var(--shadow-3);
+    }
+
+    .funcion-destacada,
+    .funcion-destacada:hover {
+        border-color: transparent;
+    }
+
+    .funcion-destacada {
+        background: radial-gradient(120% 90% at 0% 0%, var(--color-azul-700) 0%, var(--color-azul-800) 55%, var(--color-azul-900) 100%);
+    }
+
+    /* Recorte de pantalla del sistema dentro de cada tarjeta */
+    .funcion-vista {
+        border: 1px solid var(--color-borde);
+        border-radius: var(--radius-md);
+        background: var(--color-blanco);
+        box-shadow: var(--shadow-2);
+        padding: 14px 16px;
+        transition: transform 250ms ease;
+    }
+
+    .funcion:hover .funcion-vista {
+        transform: translateY(-2px);
+    }
+
+    .funcion-barra {
+        transform-origin: left;
+        transition: transform 700ms cubic-bezier(0.65, 0, 0.35, 1) 400ms;
+    }
+
+    /* Entrada escalonada: con animación (no transición) para que el retraso no afecte al hover */
+    .revelar-listo .funciones-grilla [data-revelar].is-visible {
+        animation: subir 600ms ease var(--retraso, 0ms) backwards;
+    }
+
+    /* El revelado genérico pisa la transición; se la devuelvo a las tarjetas */
+    .revelar-listo .funcion[data-revelar] {
+        transition: transform 250ms ease, box-shadow 250ms ease, border-color 250ms ease;
+    }
+
+    .revelar-listo .funcion:not(.is-visible) .funcion-barra {
+        transform: scaleX(0);
+    }
+
+    /* El engranaje se dibuja recién cuando la tarjeta aparece */
+    .revelar-listo .funcion:not(.is-visible) .nodos-animado * {
+        animation-play-state: paused;
     }
 
     /* Revelado suave al hacer scroll (solo si hay JS y sin movimiento reducido) */
@@ -521,6 +611,23 @@
     .revelar-listo [data-revelar]:not(.is-visible) {
         opacity: 0;
         transform: translateY(16px);
+    }
+
+    /* Lo que entra junto a la pantalla aparece escalonado (el JS asigna --retraso por tanda) */
+    .revelar-listo [data-revelar].is-visible:not(.funcion) {
+        transition-delay: var(--retraso, 0ms);
+    }
+
+    /* Portada: el texto entra al cargar, acompañando el dibujo del engranaje */
+    @media (prefers-reduced-motion: no-preference) {
+        .portada-entrada > * {
+            animation: subir 700ms cubic-bezier(0.22, 1, 0.36, 1) backwards;
+        }
+
+        .portada-entrada > :nth-child(2) { animation-delay: 80ms; }
+        .portada-entrada > :nth-child(3) { animation-delay: 160ms; }
+        .portada-entrada > :nth-child(4) { animation-delay: 240ms; }
+        .portada-entrada > :nth-child(5) { animation-delay: 320ms; }
     }
 }
 
@@ -568,6 +675,16 @@
 @keyframes brotar {
     from { transform: scale(0); }
     to { transform: scale(1); }
+}
+
+@keyframes subir {
+    from { opacity: 0; transform: translateY(24px); }
+}
+
+/* Halo celeste al encenderse un paso del recorrido */
+@keyframes encender {
+    from { box-shadow: 0 0 0 0 rgba(30, 181, 232, 0.55); }
+    to { box-shadow: 0 0 0 14px rgba(30, 181, 232, 0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -33,30 +33,69 @@ function initStickyHeader() {
 }
 
 function initScrollReveal() {
-    const targets = document.querySelectorAll('[data-revelar], .recorrido');
+    const targets = document.querySelectorAll('[data-revelar]');
     if (!targets.length) return;
 
-    const show = (el) => el.classList.add(el.matches('.recorrido') ? 'is-activo' : 'is-visible');
+    const show = (el) => el.classList.add('is-visible');
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) {
         targets.forEach(show);
         return;
     }
 
+    // Los elementos que entran en la misma tanda se escalonan; los que entran solos aparecen sin espera
     const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
-            show(entry.target);
-            observer.unobserve(entry.target);
-        });
-    }, { threshold: 0.2 });
+        entries
+            .filter((entry) => entry.isIntersecting)
+            .forEach((entry, index) => {
+                entry.target.style.setProperty('--retraso', `${Math.min(index, 5) * 90}ms`);
+                show(entry.target);
+                observer.unobserve(entry.target);
+            });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
 
     document.documentElement.classList.add('revelar-listo');
     targets.forEach((el) => observer.observe(el));
+}
+
+// La línea del recorrido sigue al scroll: se llena hasta el 60% de la pantalla y enciende los pasos que alcanza
+function initRecorrido() {
+    const recorrido = document.querySelector('.recorrido');
+    const pista = recorrido?.querySelector('[data-recorrido-pista]');
+    if (!recorrido || !pista) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    const pasos = [...recorrido.querySelectorAll('.recorrido-paso')];
+    let pendiente = false;
+
+    const update = () => {
+        pendiente = false;
+        const marca = window.innerHeight * 0.6;
+        const { top, height } = pista.getBoundingClientRect();
+        const progreso = Math.min(1, Math.max(0, (marca - top) / height));
+        recorrido.style.setProperty('--progreso', progreso.toFixed(4));
+
+        pasos.forEach((paso) => {
+            const nodo = paso.querySelector('.recorrido-nodo').getBoundingClientRect();
+            paso.classList.toggle('is-activo', nodo.top + nodo.height / 2 <= marca);
+        });
+    };
+
+    const onScroll = () => {
+        if (pendiente) return;
+        pendiente = true;
+        requestAnimationFrame(update);
+    };
+
+    recorrido.classList.add('is-dinamico');
+    update();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initStickyHeader();
     initScrollReveal();
+    initRecorrido();
 });
