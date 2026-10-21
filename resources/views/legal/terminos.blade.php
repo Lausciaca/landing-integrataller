@@ -43,7 +43,7 @@
                     <h2 class="t-titulo-3">4. Pagos y facturación</h2>
                     <p class="mt-2">
                         Los precios se expresan en pesos argentinos (AR$) y pueden variar según el tamaño y las
-                        necesidades del taller. El pago se procesa a través de los medios habilitados en el cotizador.
+                        necesidades del taller. El pago se procesa a través de los medios de pago que se acuerden al contratar.
                     </p>
                 </div>
 

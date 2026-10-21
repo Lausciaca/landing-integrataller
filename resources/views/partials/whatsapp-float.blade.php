@@ -1,9 +1,5 @@
-@php
-    $whatsapp = 'https://wa.me/' . config('landing.whatsapp') . '?text=' . rawurlencode(config('landing.whatsapp_message'));
-@endphp
-
 {{-- Botón flotante solo en celular. El verde WhatsApp es la única excepción de color del manual. --}}
-<a href="{{ $whatsapp }}"
+<a href="{{ \App\Support\WhatsApp::url() }}"
    target="_blank"
    rel="noopener noreferrer"
    aria-label="Escribinos por WhatsApp"

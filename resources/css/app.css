@@ -172,6 +172,14 @@
         letter-spacing: -0.02em;
     }
 
+    /* Título de la portada: más chico en el celular para que la oferta y el botón entren sin desplazar */
+    @media (max-width: 639px) {
+        .portada-titulo {
+            font-size: 32px;
+            line-height: 38px;
+        }
+    }
+
     .t-titulo-1 {
         font-size: 30px;
         line-height: 38px;
@@ -414,6 +422,93 @@
         color: var(--color-error);
         font-size: 14px;
         line-height: 20px;
+    }
+
+    /* Opciones de un toque (sucursales del formulario de demo) */
+    .opcion > span {
+        display: flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--color-borde-control);
+        border-radius: var(--radius-sm);
+        background: var(--color-superficie);
+        padding: 0 6px;
+        font-weight: 500;
+        text-align: center;
+        line-height: 18px;
+        cursor: pointer;
+        transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+    }
+
+    .opcion > input:checked + span {
+        border-color: var(--color-azul-800);
+        background: var(--color-azul-800);
+        color: var(--color-blanco);
+    }
+
+    .opcion > input:focus-visible + span {
+        outline: 2px solid var(--color-foco);
+        outline-offset: 2px;
+    }
+
+    [aria-invalid='true'] .opcion > span {
+        border-color: var(--color-error);
+    }
+
+    /* La oferta de la beta, como pastilla */
+    .oferta {
+        display: inline-flex;
+        align-items: center;
+        border-radius: 999px;
+        background: var(--color-celeste-50);
+        padding: 4px 12px;
+        color: var(--color-azul-800);
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 700;
+    }
+
+    /* Diálogo "Pedí tu demo": hoja desde abajo en el celular, ventana centrada desde 640px */
+    .dialogo-demo {
+        width: 100%;
+        max-width: 100%;
+        max-height: 100vh;
+        max-height: 100dvh;
+        margin: auto auto 0;
+        overflow-y: auto;
+        overscroll-behavior: contain;
+        border: 0;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+        background: var(--color-superficie);
+        padding: 0;
+        color: var(--color-texto);
+        box-shadow: var(--shadow-3);
+    }
+
+    .dialogo-demo[open] {
+        animation: subir 220ms ease-out;
+    }
+
+    .dialogo-demo::backdrop {
+        background: rgba(7, 29, 64, 0.6);
+    }
+
+    .dialogo-demo > div:focus {
+        outline: none;
+    }
+
+    @media (min-width: 640px) {
+        .dialogo-demo {
+            max-width: 480px;
+            max-height: calc(100dvh - 32px);
+            margin: auto;
+            border-radius: var(--radius-lg);
+        }
+    }
+
+    html.dialogo-abierto {
+        overflow: hidden;
     }
 
     /* Secundario sobre fondo azul-800 */

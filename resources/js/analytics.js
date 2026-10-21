@@ -48,6 +48,28 @@ function externalReferrer() {
     }
 }
 
+// Parámetros de la URL sin importar mayúsculas (UTM_Source) y tolerando enlaces pegados con "&amp;".
+function urlParams() {
+    const params = new Map();
+    new URLSearchParams(location.search.replace(/&amp;/gi, '&')).forEach((value, key) => {
+        const name = key.trim().toLowerCase();
+        if (value.trim() && !params.has(name)) params.set(name, value.trim());
+    });
+    return params;
+}
+
+// Red de Meta según el referente, para visitas con fbclid pero sin UTM.
+function metaNetwork(referrer) {
+    try {
+        const host = referrer ? new URL(referrer).host : '';
+        if (/(^|\.)instagram\.com$/.test(host)) return 'instagram';
+        if (/(^|\.)(facebook\.com|fb\.com|messenger\.com)$/.test(host)) return 'facebook';
+    } catch {
+        // Referente inválido.
+    }
+    return 'meta';
+}
+
 function loadAttribution() {
     const store = sessionStore();
     let attr = null;
@@ -57,14 +79,18 @@ function loadAttribution() {
         attr = null;
     }
 
-    const params = new URLSearchParams(location.search);
+    const params = urlParams();
     const utm = {};
     UTM_KEYS.forEach((key) => {
         const value = params.get(key);
         if (value) utm[key] = value.slice(0, 150);
     });
+    // utm_id ({{campaign.id}} en Meta) sirve de campaña si el nombre no llegó.
+    if (!utm.utm_campaign && params.get('utm_id')) utm.utm_campaign = params.get('utm_id').slice(0, 150);
     const fbclid = params.get('fbclid');
     const gclid = params.get('gclid');
+    // Anuncio de Meta sin UTM: al menos queda la red; la campaña no se inventa.
+    if (fbclid && !utm.utm_source) utm.utm_source = metaNetwork(document.referrer);
     const fromCampaign = Object.keys(utm).length > 0 || fbclid || gclid;
     const expired = !attr || Date.now() - (attr.last || 0) > SESSION_TIMEOUT_MS;
 
@@ -91,7 +117,7 @@ function loadAttribution() {
 
 const attribution = loadAttribution();
 
-function send(type, extra = {}) {
+export function send(type, extra = {}) {
     const payload = JSON.stringify({
         t: type,
         p: location.pathname,
@@ -257,8 +283,9 @@ function initTracking() {
         }
     }, { capture: true });
 
-    const demoForm = document.querySelector('[data-demo-form]');
-    demoForm?.addEventListener('focusin', () => send('form_start', { l: 'demo' }), { once: true });
+    document.querySelectorAll('[data-demo-form]').forEach((form) => {
+        form.addEventListener('focusin', () => send('form_start', { l: 'demo' }), { once: true });
+    });
 
     const reached = new Set();
     const onScroll = () => {

@@ -17,7 +17,7 @@ class DemoRequestNotification extends Mailable
 
     public function envelope(): Envelope
     {
-        return new Envelope(subject: 'Nueva solicitud de demo — '.$this->contact->taller);
+        return new Envelope(subject: 'Nueva solicitud de demo — '.($this->contact->taller ?: $this->contact->name));
     }
 
     public function content(): Content

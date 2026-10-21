@@ -65,6 +65,10 @@
 
     @include('partials.whatsapp-float')
 
+    @unless (request()->routeIs('contacto'))
+        @include('partials.demo-dialog')
+    @endunless
+
     @include('partials.analytics')
 
     @stack('scripts')

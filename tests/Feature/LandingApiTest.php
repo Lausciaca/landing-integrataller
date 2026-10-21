@@ -83,7 +83,7 @@ class LandingApiTest extends TestCase
         $this->assertSame('America/Argentina/Buenos_Aires', config('app.timezone'));
         $this->travelTo(CarbonImmutable::parse('2026-10-19 18:55:00', 'America/Argentina/Buenos_Aires'));
         Contact::create([
-            'name' => 'Persona', 'taller' => 'Taller', 'phone' => '1100000000',
+            'name' => 'Persona', 'taller' => 'Taller', 'branches' => '4+', 'phone' => '1100000000',
             'email' => 'persona@example.test', 'message' => 'Hola', 'source' => 'demo-form',
         ]);
 
@@ -92,7 +92,8 @@ class LandingApiTest extends TestCase
             ->getJson('/api/v1/landing/demo-requests?'.http_build_query(['updated_since' => '2026-10-19T21:54:00+00:00']))
             ->assertOk()
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.created_at', '2026-10-19T18:55:00-03:00');
+            ->assertJsonPath('data.0.created_at', '2026-10-19T18:55:00-03:00')
+            ->assertJsonPath('data.0.branches', '4+');
 
         $this->travel(10)->minutes();
         $this->withToken('test-landing-token')

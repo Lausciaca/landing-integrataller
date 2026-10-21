@@ -1,5 +1,5 @@
 @php
-    $whatsapp = 'https://wa.me/' . config('landing.whatsapp') . '?text=' . rawurlencode(config('landing.whatsapp_message'));
+    $whatsapp = \App\Support\WhatsApp::url();
     $social = array_values(array_filter((array) config('landing.social', [])));
 @endphp
 

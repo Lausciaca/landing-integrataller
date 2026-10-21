@@ -34,6 +34,7 @@ class SaasNotificationTest extends TestCase
         return [
             'name' => 'Juan Pérez',
             'taller' => 'Taller Central',
+            'branches' => '2',
             'phone' => '3364006452',
             'email' => 'juan@example.test',
             ...$extra,

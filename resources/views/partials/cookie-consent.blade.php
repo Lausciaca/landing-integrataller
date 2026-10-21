@@ -1,9 +1,13 @@
 {{-- Consentimiento de cookies: Meta, Clarity y GA4 solo cargan si la persona acepta (resources/js/analytics.js). --}}
 <div data-cookie-banner hidden role="dialog" aria-modal="false" aria-labelledby="cookies-titulo" aria-describedby="cookies-texto"
-     class="fixed inset-x-0 bottom-0 z-[300] p-3 sm:p-6">
-    <div class="mx-auto max-w-3xl rounded-lg bg-superficie p-5 shadow-3 sm:p-6">
-        <h2 id="cookies-titulo" class="t-titulo-3">Tu privacidad, tu decisión</h2>
-        <p id="cookies-texto" class="t-cuerpo-chico mt-2 text-texto-secundario">
+     class="fixed inset-x-0 bottom-0 z-[300] p-2 sm:p-6">
+    {{-- En el celular es compacto para no tapar la portada (la oferta y "Pedí tu demo") --}}
+    <div class="mx-auto max-w-3xl rounded-lg bg-superficie p-4 shadow-3 sm:p-6">
+        <h2 id="cookies-titulo" class="t-titulo-3 max-sm:sr-only">Tu privacidad, tu decisión</h2>
+        <p class="t-cuerpo-chico text-texto-secundario sm:hidden" aria-hidden="true">
+            Con tu permiso medimos el uso del sitio y nuestros anuncios. <a href="{{ route('privacidad') }}#cookies" class="enlace">Más info</a>.
+        </p>
+        <p id="cookies-texto" class="t-cuerpo-chico mt-2 text-texto-secundario max-sm:sr-only">
             Con tu permiso usamos herramientas de medición
             @if (isset($tags['clarity']) || isset($tags['ga4']))
                 ({{ collect([isset($tags['clarity']) ? 'Microsoft Clarity' : null, isset($tags['ga4']) ? 'Google Analytics' : null])->filter()->join(' y ') }})
@@ -35,11 +39,11 @@
             @endif
         </fieldset>
 
-        <div class="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:items-center sm:justify-end">
-            <button type="button" class="boton boton-terciario" data-cookie-configure>Elegir</button>
-            <button type="button" class="boton boton-secundario" data-cookie-reject>Rechazar</button>
-            <button type="button" class="boton boton-principal" data-cookie-accept>Aceptar</button>
-            <button type="button" class="boton boton-principal" data-cookie-save hidden>Guardar elección</button>
+        <div class="mt-3 grid grid-cols-3 gap-2 sm:mt-4 sm:flex sm:items-center sm:justify-end">
+            <button type="button" class="boton boton-terciario max-sm:!px-1" data-cookie-configure>Elegir</button>
+            <button type="button" class="boton boton-secundario max-sm:!px-1" data-cookie-reject>Rechazar</button>
+            <button type="button" class="boton boton-principal max-sm:!px-1" data-cookie-accept>Aceptar</button>
+            <button type="button" class="boton boton-principal max-sm:col-span-3" data-cookie-save hidden>Guardar elección</button>
         </div>
     </div>
 </div>

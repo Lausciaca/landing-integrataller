@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contact extends Model
 {
+    /** Options of the demo form, with the label used in messages. */
+    public const BRANCHES = ['1' => '1', '2' => '2', '3' => '3', '4+' => '4 o más'];
+
     /**
      * The attributes that are mass assignable.
      *
@@ -14,6 +17,7 @@ class Contact extends Model
     protected $fillable = [
         'name',
         'taller',
+        'branches',
         'phone',
         'email',
         'message',

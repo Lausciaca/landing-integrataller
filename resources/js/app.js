@@ -1,4 +1,4 @@
-import './analytics';
+import { send } from './analytics';
 
 function initMobileMenu() {
     const toggle = document.querySelector('[data-menu-toggle]');
@@ -93,7 +93,113 @@ function initRecorrido() {
     window.addEventListener('resize', onScroll);
 }
 
+// "Pedí tu demo" abre el formulario corto en la misma pantalla. Sin <dialog>, el enlace sigue a /contacto.
+function initDemoDialog() {
+    const dialog = document.querySelector('[data-demo-dialog]');
+    if (!dialog || typeof dialog.showModal !== 'function') return;
+
+    let opener = null;
+
+    document.addEventListener('click', (event) => {
+        const link = event.target.closest?.('a[data-cta="demo"]');
+        if (!link || event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey) return;
+
+        event.preventDefault();
+        opener = link;
+        dialog.showModal();
+        document.documentElement.classList.add('dialogo-abierto');
+        // En el celular no se abre el teclado de entrada: primero se ve el formulario completo
+        if (window.matchMedia('(pointer: fine)').matches) dialog.querySelector('input[name="name"]')?.focus();
+    });
+
+    dialog.addEventListener('close', () => {
+        document.documentElement.classList.remove('dialogo-abierto');
+        opener?.focus({ preventScroll: true });
+    });
+    // Tocar el fondo oscuro cierra
+    dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close();
+    });
+    dialog.querySelectorAll('[data-dialog-close]').forEach((button) => button.addEventListener('click', () => dialog.close()));
+}
+
+// El formulario de demo se envía con fetch: los errores aparecen sin recargar y, si sale bien, se pasa a la página de gracias
+function initDemoForms() {
+    document.querySelectorAll('[data-demo-form]').forEach((form) => {
+        const submit = form.querySelector('[data-submit]');
+        const notice = form.querySelector('[data-form-aviso]');
+        const submitText = submit.textContent;
+
+        const setSending = (sending) => {
+            submit.disabled = sending;
+            submit.textContent = sending ? 'Enviando…' : submitText;
+        };
+
+        const clearErrors = () => {
+            notice.hidden = true;
+            form.querySelectorAll('[data-error-for]').forEach((error) => {
+                error.hidden = true;
+                error.textContent = '';
+            });
+            form.querySelectorAll('[aria-invalid]').forEach((field) => field.removeAttribute('aria-invalid'));
+        };
+
+        const showErrors = (errors) => {
+            let first = null;
+            Object.entries(errors).forEach(([name, messages]) => {
+                const error = form.querySelector(`[data-error-for="${name}"]`);
+                if (!error) return;
+                error.textContent = [].concat(messages)[0];
+                error.hidden = false;
+                const field = form.querySelector(`[data-campo="${name}"]`) || form.querySelector(`[name="${name}"]`);
+                field?.setAttribute('aria-invalid', 'true');
+                first ??= form.querySelector(`[name="${name}"]`);
+            });
+            first?.focus();
+        };
+
+        const fail = (reason) => {
+            notice.hidden = false;
+            setSending(false);
+            send('form_error', { l: `demo: ${reason}` });
+        };
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            if (submit.disabled) return;
+            clearErrors();
+            setSending(true);
+
+            let response;
+            try {
+                response = await fetch(form.action, {
+                    method: 'POST',
+                    body: new FormData(form),
+                    headers: { Accept: 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+                    credentials: 'same-origin',
+                });
+            } catch {
+                fail('sin conexión');
+                return;
+            }
+
+            const data = await response.json().catch(() => ({}));
+            if (response.ok) {
+                window.location.assign(data.redirect || '/demo/solicitada');
+            } else if (response.status === 422 && data.errors) {
+                setSending(false);
+                showErrors(data.errors);
+                send('form_error', { l: `demo: faltan ${Object.keys(data.errors).join(', ')}` });
+            } else {
+                fail(`error ${response.status}`);
+            }
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    initDemoDialog();
+    initDemoForms();
     initMobileMenu();
     initStickyHeader();
     initScrollReveal();

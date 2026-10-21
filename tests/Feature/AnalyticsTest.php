@@ -92,6 +92,9 @@ class AnalyticsTest extends TestCase
         $this->beacon(['t' => 'pageview', 'p' => '/', 'a' => ['session_id' => 'x']])->assertNoContent();
         $this->assertSame(0, AnalyticsEvent::count());
 
+        $this->beacon(['t' => 'form_error', 'p' => '/', 'a' => $this->attribution(), 'l' => 'demo: error 500'])->assertNoContent();
+        $this->assertSame('demo: error 500', AnalyticsEvent::where('type', 'form_error')->value('label'));
+
         $this->beacon(['t' => 'scroll', 'p' => '/', 'a' => $this->attribution(), 'v' => 33])->assertNoContent();
         $this->beacon(['t' => 'engagement', 'p' => '/', 'a' => $this->attribution(), 'v' => 99999])->assertNoContent();
         $this->assertNull(AnalyticsEvent::where('type', 'scroll')->value('value'));
@@ -105,7 +108,7 @@ class AnalyticsTest extends TestCase
         }
 
         $this->post('/contacto', [
-            'name' => 'Juan Pérez', 'taller' => 'Taller Central', 'phone' => '3364006452', 'email' => 'juan@example.test',
+            'name' => 'Juan Pérez', 'taller' => 'Taller Central', 'branches' => '2', 'phone' => '3364006452', 'email' => 'juan@example.test',
         ], ['REMOTE_ADDR' => '200.10.20.30'])->assertRedirect(route('demo.thank-you'));
     }
 
@@ -120,7 +123,7 @@ class AnalyticsTest extends TestCase
     public function test_demo_request_saves_attribution_and_records_the_conversion(): void
     {
         $this->post('/contacto', [
-            'name' => 'Juan Pérez', 'taller' => 'Taller Central', 'phone' => '0336 15 400-6452',
+            'name' => 'Juan Pérez', 'taller' => 'Taller Central', 'branches' => '2', 'phone' => '0336 15 400-6452',
             'email' => 'juan@example.test', 'attribution' => json_encode($this->attribution()),
         ], ['User-Agent' => self::UA])->assertRedirect(route('demo.thank-you'))
             ->assertSessionHas('conversion', fn (array $conversion) => $conversion['meta'] === 'Lead');
@@ -145,7 +148,7 @@ class AnalyticsTest extends TestCase
             'landing.analytics.meta_test_event_code' => 'TEST123',
         ]);
         $form = [
-            'name' => 'Juan Pérez', 'taller' => 'Taller Central', 'phone' => '0336 15 400-6452',
+            'name' => 'Juan Pérez', 'taller' => 'Taller Central', 'branches' => '2', 'phone' => '0336 15 400-6452',
             'email' => 'JUAN@example.test', 'attribution' => json_encode($this->attribution()),
         ];
 

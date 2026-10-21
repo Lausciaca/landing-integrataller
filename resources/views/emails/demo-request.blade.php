@@ -1,11 +1,12 @@
-<x-email.layout :preheader="'Nuevo pedido de demo de ' . $contact->taller">
+<x-email.layout :preheader="'Nuevo pedido de demo de ' . ($contact->taller ?: $contact->name)">
     <h1 style="margin:0 0 16px; font-size:28px; line-height:36px; font-weight:700; color:#0B2A5B;">Nuevo pedido de demo</h1>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="font-size:16px; line-height:24px;">
         @foreach ([
             'Nombre' => $contact->name,
-            'Taller' => $contact->taller,
-            'Email' => $contact->email,
-            'Teléfono' => $contact->phone,
+            'Taller' => $contact->taller ?: 'Sin dato.',
+            'Sucursales' => \App\Models\Contact::BRANCHES[$contact->branches] ?? 'Sin dato.',
+            'Email' => $contact->email ?: 'Sin dato.',
+            'WhatsApp' => $contact->phone,
             'Consulta' => $contact->message ?: 'Sin comentario adicional.',
             'Pidió recibir novedades' => $contact->marketing_opt_in_requested ? 'Sí; falta confirmar el email.' : 'No.',
         ] as $label => $value)

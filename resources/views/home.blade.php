@@ -46,7 +46,7 @@
         ['q' => '¿Sirve para talleres de estética vehicular?', 'a' => 'Sí. IntegraTaller sirve para talleres mecánicos y para lavado, detailing, pintura, polarizado y ploteo.'],
         ['q' => '¿Tengo que instalar algo?', 'a' => 'No. Funciona en la nube: entrás desde la computadora, la tablet o el celular, desde cualquier lugar.'],
         ['q' => '¿Puedo usarlo con varias sucursales?', 'a' => 'Sí. Cada sucursal tiene su información, y vos podés ver todas juntas o una por una.'],
-        ['q' => '¿Cuánto cuesta?', 'a' => 'Depende de la cantidad de sucursales y personas. En la demo te pasamos el precio exacto para tu taller.', 'cotizer' => true],
+        ['q' => '¿Cuánto cuesta?', 'a' => 'Depende de la cantidad de sucursales y personas. En la beta tenés 1 mes gratis y 50% de descuento. En la demo te pasamos el precio exacto para tu taller.', 'whatsapp' => true],
         ['q' => '¿Puedo recibir consejos aunque todavía no quiera una demo?', 'a' => 'Sí. Suscribite a la guía mensual al pie de esta página: confirmás tu email y te das de baja cuando quieras.'],
     ];
 @endphp
@@ -54,18 +54,23 @@
 @section('content')
     {{-- Portada --}}
     <section class="overflow-hidden bg-azul-800 text-white">
-        <div class="contenedor grid items-center gap-8 pb-12 pt-12 md:gap-10 md:py-20 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:py-28">
-            <div class="portada-entrada">
-                <p class="t-etiqueta !text-celeste-400">Tu taller, en orden.</p>
-                <h1 class="t-display mt-5 max-w-[36rem] !text-white">El control de todas tus sucursales, en un solo sistema.</h1>
-                <p class="t-cuerpo-grande mt-6 max-w-[32rem] text-azul-100">
+        <div class="contenedor grid items-center gap-8 pb-12 pt-7 md:gap-10 md:py-20 lg:grid-cols-[1fr_1.1fr] lg:gap-12 lg:py-28">
+            {{-- Para quién es, la oferta y el botón tienen que verse sin desplazar, también en el navegador de Instagram;
+                 por eso en el celular la descripción pasa debajo de los botones --}}
+            <div class="portada-entrada flex flex-col">
+                <p class="t-cuerpo-chico font-medium text-celeste-400 md:text-[15px]">
+                    Para talleres con varias sucursales o equipos de 4 o más
+                    <span class="oferta mt-2 flex w-fit md:mt-3">1 mes gratis + 50% en la beta</span>
+                </p>
+                <h1 class="t-display portada-titulo mt-4 max-w-[36rem] !text-white md:mt-5">El control de todas tus sucursales, en un solo sistema.</h1>
+                <p class="mt-5 max-w-[32rem] text-azul-100 max-sm:order-1 md:mt-6 md:text-[18px] md:leading-7">
                     Órdenes de trabajo, clientes y finanzas centralizados. Sabé qué pasa en cada taller sin tener que estar ahí.
                 </p>
-                <div class="mt-9 flex flex-col gap-3 sm:flex-row">
+                <div class="mt-5 flex flex-col gap-3 sm:flex-row md:mt-9">
                     <a href="{{ route('contacto') }}" class="boton boton-claro" data-cta="demo">Pedí tu demo</a>
                     <a href="#como-funciona" class="boton boton-borde-claro">Ver cómo funciona</a>
                 </div>
-                <p class="t-cuerpo-chico mt-8 text-azul-100 md:mt-10">Talleres mecánicos y de estética vehicular · En la nube · Hecho en Argentina</p>
+                <p class="t-cuerpo-chico mt-6 text-azul-100 max-sm:order-2 md:mt-10">Talleres mecánicos y de estética vehicular · En la nube · Hecho en Argentina</p>
             </div>
 
             <x-nodos animado
@@ -306,7 +311,10 @@
         <div class="contenedor">
             <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
                 <x-section-heading data-revelar id="faq-title" eyebrow="Preguntas frecuentes" title="Antes de ver el sistema." />
-                <a href="{{ config('landing.app_url') }}" class="boton boton-secundario w-full shrink-0 sm:w-auto">Calcular mi plan</a>
+                <a href="{{ \App\Support\WhatsApp::url() }}" target="_blank" rel="noopener noreferrer" class="boton boton-secundario w-full shrink-0 sm:w-auto">
+                    <x-icon name="whatsapp" class="h-5 w-5" />
+                    Cotizá por WhatsApp
+                </a>
             </div>
             <dl class="mt-10 grid gap-x-12 gap-y-8 md:mt-12 md:grid-cols-2">
                 @foreach ($faqs as $faq)
@@ -314,8 +322,8 @@
                         <dt class="t-titulo-3 text-azul-800">{{ $faq['q'] }}</dt>
                         <dd class="mt-2 max-w-[62ch] text-texto-secundario">
                             {{ $faq['a'] }}
-                            @if (!empty($faq['cotizer']))
-                                <a href="{{ config('landing.app_url') }}" class="enlace">También podés usar el cotizador.</a>
+                            @if (!empty($faq['whatsapp']))
+                                <a href="{{ \App\Support\WhatsApp::url() }}" target="_blank" rel="noopener noreferrer" class="enlace">También podés escribirnos por WhatsApp.</a>
                             @endif
                         </dd>
                     </div>

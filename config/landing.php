@@ -8,17 +8,15 @@ return [
     |--------------------------------------------------------------------------
     |
     | Central configuration for the IntegraTaller marketing landing page.
-    | The app URL points to the separate self-service cotizador.
+    | Quotes are only given through WhatsApp or the demo form.
     |
     */
-
-    'app_url' => env('LANDING_APP_URL', 'https://app.integrataller.com/comenzar'),
 
     'whatsapp' => env('LANDING_WHATSAPP', '5493364006452'),
 
     'whatsapp_message' => env(
         'LANDING_WHATSAPP_MESSAGE',
-        'Hola, quiero conocer IntegraTaller para mi taller.'
+        'Hola, quiero ver una demo de IntegraTaller para mi taller'
     ),
 
     'mercadopago_url' => env('LANDING_MERCADOPAGO_URL', 'https://www.mercadopago.com.ar'),

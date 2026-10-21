@@ -22,7 +22,9 @@ Todas las rutas requieren `Authorization: Bearer <LANDING_API_TOKEN>`. Si la var
 
 ### `GET /demo-requests`
 
-Devuelve solicitudes de demo con `id`, `name`, `workshop`, `phone`, `email`, `message`, `status`, `marketing_opt_in_requested`, `source`, `created_at` y `updated_at`.
+Devuelve solicitudes de demo con `id`, `name`, `workshop`, `branches`, `phone`, `email`, `message`, `status`, `marketing_opt_in_requested`, `source`, `created_at` y `updated_at`.
+
+El formulario de demo es corto: solo son obligatorios `name`, `phone` (WhatsApp) y `branches` (`1`, `2`, `3` o `4+`). `workshop` y `email` pueden venir en `null`, y `message` siempre empieza con la cantidad de sucursales (por ejemplo, `Sucursales: 4 o más`).
 
 `marketing_opt_in_requested` solo registra que se marcó la casilla en el formulario de demo. **No es consentimiento confirmado ni habilita campañas.** La lista autorizada para marketing está en el endpoint de suscriptores.
 

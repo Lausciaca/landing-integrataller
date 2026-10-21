@@ -6,7 +6,10 @@ use App\Mail\ConfirmNewsletterSubscription;
 use App\Mail\DemoRequestNotification;
 use App\Models\Contact;
 use App\Models\NewsletterSubscriber;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Request;
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
@@ -65,39 +68,126 @@ class LandingTest extends TestCase
         $response->assertSee('FAQPage', false);
     }
 
-    public function test_demo_request_stores_a_contact_and_notifies_the_team(): void
+    public function test_home_shows_audience_and_offer_without_the_self_service_link(): void
+    {
+        $this->get('/')
+            ->assertOk()
+            ->assertSee('Para talleres con varias sucursales o equipos de 4 o más')
+            ->assertSee('1 mes gratis + 50% en la beta')
+            ->assertSee('data-demo-dialog', false)
+            ->assertDontSee('app.integrataller.com')
+            ->assertDontSee('cotizador');
+    }
+
+    public function test_whatsapp_links_open_the_conversation_with_the_demo_message(): void
+    {
+        $url = 'https://wa.me/5493364006452?text='.rawurlencode('Hola, quiero ver una demo de IntegraTaller para mi taller');
+        config(['landing.whatsapp' => '5493364006452', 'landing.whatsapp_message' => 'Hola, quiero ver una demo de IntegraTaller para mi taller']);
+
+        $this->get('/')->assertSee($url, false);
+        $this->get('/contacto')->assertSee($url, false)->assertDontSee('data-demo-dialog', false);
+    }
+
+    public function test_short_demo_request_stores_a_contact_and_notifies_the_team(): void
     {
         Mail::fake();
         config(['landing.demo_notification_email' => 'ventas@example.test']);
 
         $response = $this->post('/contacto', [
             'name' => 'Juan Pérez',
-            'taller' => 'Taller Central',
-            'phone' => '3364006452',
-            'email' => 'JUAN@example.test',
-            'message' => 'Quiero organizar las órdenes.',
+            'phone' => '336 400-6452',
+            'branches' => '4+',
         ]);
 
         $response->assertRedirect(route('demo.thank-you'));
 
         $this->assertDatabaseHas('contacts', [
             'name' => 'Juan Pérez',
-            'taller' => 'Taller Central',
-            'email' => 'juan@example.test',
+            'taller' => null,
+            'email' => null,
+            'branches' => '4+',
+            'message' => 'Sucursales: 4 o más',
             'source' => 'demo-form',
         ]);
 
-        $this->assertSame(1, Contact::count());
         $this->assertSame(0, NewsletterSubscriber::count());
-        Mail::assertSent(DemoRequestNotification::class);
+        Mail::assertSent(DemoRequestNotification::class, fn (DemoRequestNotification $mail) => str_contains($mail->render(), '4 o más'));
     }
 
-    public function test_demo_form_requires_contact_details_and_email(): void
+    public function test_demo_request_keeps_optional_details_after_the_branches(): void
     {
-        $response = $this->post('/contacto', []);
+        $this->post('/contacto', [
+            'name' => 'Juan Pérez',
+            'taller' => 'Taller Central',
+            'phone' => '3364006452',
+            'branches' => '2',
+            'email' => 'JUAN@example.test',
+            'message' => 'Quiero organizar las órdenes.',
+        ])->assertRedirect(route('demo.thank-you'));
 
-        $response->assertSessionHasErrors(['name', 'taller', 'phone', 'email']);
+        $this->assertDatabaseHas('contacts', [
+            'taller' => 'Taller Central',
+            'email' => 'juan@example.test',
+            'message' => "Sucursales: 2\n\nQuiero organizar las órdenes.",
+        ]);
+    }
+
+    public function test_demo_form_requires_name_whatsapp_and_branches(): void
+    {
+        $this->post('/contacto', [])
+            ->assertSessionHasErrors(['name', 'phone', 'branches'])
+            ->assertSessionDoesntHaveErrors(['taller', 'email']);
+
+        $this->post('/contacto', ['name' => 'Ana', 'phone' => '1234-567', 'branches' => '9'])
+            ->assertSessionHasErrors(['phone', 'branches']);
+
         $this->assertSame(0, Contact::count());
+    }
+
+    public function test_dialog_submission_gets_json_with_the_thank_you_page(): void
+    {
+        $this->postJson('/contacto', ['name' => 'Ana', 'phone' => '11 3344-5566', 'branches' => '1'])
+            ->assertOk()
+            ->assertExactJson(['redirect' => route('demo.thank-you')])
+            ->assertSessionHas('conversion', fn (array $conversion) => $conversion['meta'] === 'Lead');
+
+        $this->postJson('/contacto', ['name' => 'Ana'])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['phone' => 'Escribí tu WhatsApp.', 'branches']);
+
+        $this->assertSame(1, Contact::count());
+    }
+
+    public function test_demo_form_skips_csrf_but_other_forms_keep_it(): void
+    {
+        // Laravel no valida CSRF en los tests; esta copia del middleware sí lo hace.
+        $csrf = new class($this->app, $this->app['encrypter']) extends ValidateCsrfToken
+        {
+            protected function runningUnitTests()
+            {
+                return false;
+            }
+        };
+        $request = fn (string $uri) => tap(Request::create($uri, 'POST', ['_token' => 'token-viejo']))
+            ->setLaravelSession(tap($this->app['session.store'])->put('_token', 'token-de-la-sesion'));
+
+        // El navegador de Facebook/Instagram puede enviar un token que ya no coincide con la sesión.
+        $this->assertSame('ok', $csrf->handle($request('/contacto'), fn () => response('ok'))->getContent());
+
+        $this->expectException(TokenMismatchException::class);
+        $csrf->handle($request('/newsletter/suscribir'), fn () => response('ok'));
+    }
+
+    public function test_newsletter_opt_in_without_email_is_ignored(): void
+    {
+        Mail::fake();
+
+        $this->post('/contacto', ['name' => 'Ana', 'phone' => '1133445566', 'branches' => '1', 'marketing_opt_in' => '1'])
+            ->assertRedirect(route('demo.thank-you'));
+
+        $this->assertDatabaseHas('contacts', ['marketing_opt_in_requested' => false]);
+        $this->assertSame(0, NewsletterSubscriber::count());
+        Mail::assertNothingSent();
     }
 
     public function test_marketing_opt_in_is_separate_and_requires_email_confirmation(): void
@@ -110,6 +200,7 @@ class LandingTest extends TestCase
         $this->post('/contacto', [
             'name' => 'Ana',
             'taller' => 'Taller Norte',
+            'branches' => '1',
             'phone' => '1133445566',
             'email' => 'ana@example.test',
             'marketing_opt_in' => '1',

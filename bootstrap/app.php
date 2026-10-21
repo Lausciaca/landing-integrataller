@@ -14,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Written by JavaScript (consent banner and Meta Pixel), read as plain text.
         $middleware->encryptCookies(except: ['it_consent', '_fbp', '_fbc']);
+        // Public lead form without login (honeypot + throttle). The Facebook and
+        // Instagram in-app browsers prefetch pages, which leaves a CSRF token that
+        // no longer matches the session and ends in a 419 on submit.
+        $middleware->validateCsrfTokens(except: ['contacto']);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

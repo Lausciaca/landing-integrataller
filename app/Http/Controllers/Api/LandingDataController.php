@@ -26,6 +26,7 @@ class LandingDataController extends Controller
             'id' => $contact->id,
             'name' => $contact->name,
             'workshop' => $contact->taller,
+            'branches' => $contact->branches,
             'phone' => $contact->phone,
             'email' => $contact->email,
             'message' => $contact->message,
