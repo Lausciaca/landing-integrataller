@@ -52,7 +52,7 @@
 
         <div class="mt-8 rounded-md bg-azul-50 p-5">
             <p class="font-medium text-azul-800">Mientras tanto, podés probarlo ya: 1 mes gratis.</p>
-            <p class="t-cuerpo-chico mt-1 text-texto-secundario">Te registrás con tu cuenta de Google y empezás a cargar tus órdenes hoy.</p>
+            <p class="t-cuerpo-chico mt-1 text-texto-secundario">Te registrás con tu cuenta de Google, sin tarjeta, y empezás a cargar tus órdenes hoy.</p>
             <a href="{{ \App\Support\Saas::signupUrl() }}" class="boton boton-terciario mt-2 !px-0" data-cta="registro" data-registro>
                 Probá 1 mes gratis
                 <x-icon name="arrow-right" class="h-4 w-4" />

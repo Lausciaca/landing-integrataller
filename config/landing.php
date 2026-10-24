@@ -61,7 +61,7 @@ return [
         'response_time_text' => 'Te escribimos en menos de 2 horas, de lunes a sábado de 9 a 19.',
 
         // TODO-CONFIRMAR: "Sin permanencia" (va debajo de los botones de la portada y del cierre; en precios va pricing_trust_line).
-        'risk_reversal' => '1 mes gratis. Sin permanencia. Cancelás cuando quieras.',
+        'risk_reversal' => '1 mes gratis, sin tarjeta. Sin permanencia. Cancelás cuando quieras.',
 
         // Preguntas frecuentes que dependen de definiciones del dueño.
         'faq' => [

@@ -29,7 +29,7 @@ class HomeContentTest extends TestCase
             $this->assertSame(2, substr_count($html, $pregunta), "Falta en la página o en el FAQPage: {$pregunta}");
         }
         $this->assertGreaterThan(8, substr_count($html, '<details data-revelar class="pregunta'));
-        $this->assertStringContainsString('no te cobramos nada por 30 días', $html);
+        $this->assertStringContainsString('empezás al instante, sin tarjeta. Tenés 30 días', $html);
     }
 
     public function test_beneficios_en_plata_y_reversion_de_riesgo(): void
@@ -40,7 +40,7 @@ class HomeContentTest extends TestCase
         $this->assertStringContainsString('Presupuestos por WhatsApp', $html);
         $this->assertStringContainsString('Con recuperar un trabajo sin cobrar por mes, el sistema se paga solo.', $html);
         // Portada y cierre (precios no se muestra sin datos del SaaS).
-        $this->assertSame(2, substr_count($html, '1 mes gratis. Sin permanencia. Cancelás cuando quieras.'));
+        $this->assertSame(2, substr_count($html, '1 mes gratis, sin tarjeta. Sin permanencia. Cancelás cuando quieras.'));
     }
 
     public function test_capturas_reales_con_dimensiones_y_carga_diferida_fuera_de_la_portada(): void

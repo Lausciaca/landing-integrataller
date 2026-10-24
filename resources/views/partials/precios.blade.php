@@ -74,6 +74,9 @@
                         <a href="{{ \App\Support\Saas::signupUrl() }}" class="boton boton-principal" data-cta="registro" data-registro>{{ $pruebaTexto ? 'Probá '.$pruebaTexto : 'Empezá ahora' }}</a>
                         <a href="{{ route('contacto') }}" class="boton boton-secundario" data-cta="demo">Pedí tu demo</a>
                     </div>
+                    @if ($pruebaTexto)
+                        <p class="t-cuerpo-chico mt-4 text-texto-secundario">Empezás hoy, sin tarjeta. Si te sirve, activás el débito automático con MercadoPago antes de que termine la prueba.</p>
+                    @endif
                 </div>
             </article>
 
