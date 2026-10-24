@@ -4,6 +4,8 @@
 @section('meta_description', 'Órdenes de trabajo, clientes y finanzas de todas tus sucursales en un solo sistema. Para talleres mecánicos y de estética vehicular. Pedí tu demo.')
 
 @php
+    $precios = app(\App\Services\PlanesPublicos::class)->datos();
+
     $questions = [
         ['q' => '¿En qué quedó la Hilux que entró el lunes?', 'today' => 'Hoy: preguntás en el taller.'],
         ['q' => '¿Por qué no cierra la caja de Norte?', 'today' => 'Hoy: revisás planillas.'],
@@ -46,7 +48,9 @@
         ['q' => '¿Sirve para talleres de estética vehicular?', 'a' => 'Sí. IntegraTaller sirve para talleres mecánicos y para lavado, detailing, pintura, polarizado y ploteo.'],
         ['q' => '¿Tengo que instalar algo?', 'a' => 'No. Funciona en la nube: entrás desde la computadora, la tablet o el celular, desde cualquier lugar.'],
         ['q' => '¿Puedo usarlo con varias sucursales?', 'a' => 'Sí. Cada sucursal tiene su información, y vos podés ver todas juntas o una por una.'],
-        ['q' => '¿Cuánto cuesta?', 'a' => 'Depende de la cantidad de sucursales y personas. En la beta tenés 1 mes gratis y 50% de descuento. En la demo te pasamos el precio exacto para tu taller.', 'whatsapp' => true],
+        $precios
+            ? ['q' => '¿Cuánto cuesta?', 'a' => 'El plan '.$precios['pro']['nombre'].' sale '.\App\Services\PlanesPublicos::pesos($precios['pro']['precio_final']).' por mes, final, con el precio de la beta'.($precios['pro']['descuento_pct'] > 0 ? ' (lista: '.\App\Services\PlanesPublicos::pesos($precios['pro']['precio']).')' : '').'. Suma según tus sucursales y las personas que lo usan: en la sección de precios calculás el total de tu taller.', 'precios' => true]
+            : ['q' => '¿Cuánto cuesta?', 'a' => 'Depende de la cantidad de sucursales y personas. En la beta tenés 1 mes gratis y 50% de descuento. Escribinos y te pasamos el precio exacto para tu taller.', 'whatsapp' => true],
         ['q' => '¿Puedo recibir consejos aunque todavía no quiera una demo?', 'a' => 'Sí. Suscribite a la guía mensual al pie de esta página: confirmás tu email y te das de baja cuando quieras.'],
     ];
 @endphp
@@ -283,6 +287,10 @@
         </div>
     </section>
 
+    @if ($precios)
+        @include('partials.precios', ['precios' => $precios])
+    @endif
+
     {{-- Cómo empezar --}}
     <section id="como-empezar" class="seccion bg-white" aria-labelledby="empezar-title">
         <div class="contenedor">
@@ -322,6 +330,9 @@
                         <dt class="t-titulo-3 text-azul-800">{{ $faq['q'] }}</dt>
                         <dd class="mt-2 max-w-[62ch] text-texto-secundario">
                             {{ $faq['a'] }}
+                            @if (!empty($faq['precios']))
+                                <a href="#precios" class="enlace">Ver precios.</a>
+                            @endif
                             @if (!empty($faq['whatsapp']))
                                 <a href="{{ \App\Support\WhatsApp::url() }}" target="_blank" rel="noopener noreferrer" class="enlace">También podés escribirnos por WhatsApp.</a>
                             @endif
@@ -357,7 +368,20 @@
             'description' => 'Sistema de gestión para talleres mecánicos y de estética vehicular: órdenes de trabajo, clientes y finanzas de todas las sucursales en un solo lugar.',
             'areaServed' => ['@type' => 'Country', 'name' => 'Argentina'],
             'featureList' => collect($features)->pluck('name')->all(),
-        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
+        ] + ($precios ? ['offers' => [
+            '@type' => 'Offer',
+            'name' => 'Plan '.$precios['pro']['nombre'],
+            'price' => $precios['pro']['precio_final'],
+            'priceCurrency' => 'ARS',
+            'url' => url('/').'#precios',
+            'priceSpecification' => [
+                '@type' => 'UnitPriceSpecification',
+                'price' => $precios['pro']['precio_final'],
+                'priceCurrency' => 'ARS',
+                'unitText' => 'mes',
+                'billingDuration' => 'P1M',
+            ],
+        ]] : []), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) !!}
     </script>
     <script type="application/ld+json">
         {!! json_encode([

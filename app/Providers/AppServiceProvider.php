@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\PlanesPublicos;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -14,7 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // One lookup per request: the home, the header and the JSON-LD share it.
+        $this->app->scoped(PlanesPublicos::class);
     }
 
     /**

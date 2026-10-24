@@ -3,8 +3,11 @@
         ['label' => 'Funciones', 'href' => route('servicios')],
         ['label' => 'Cómo funciona', 'href' => route('home') . '#como-funciona'],
         ['label' => 'Clientes', 'href' => route('home') . '#clientes'],
+        // Solo si la home muestra precios (los datos del SaaS o el respaldo).
+        app(\App\Services\PlanesPublicos::class)->datos() ? ['label' => 'Precios', 'href' => route('home') . '#precios'] : null,
         ['label' => 'Guías', 'href' => route('tutoriales')],
     ];
+    $links = array_filter($links);
 @endphp
 
 <header data-site-header class="sticky top-0 z-[100] border-b border-borde bg-white transition-shadow">
