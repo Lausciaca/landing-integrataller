@@ -5,10 +5,10 @@
 
 @php
     $modules = [
-        ['icon' => 'calendar', 'label' => 'Turnos y clientes', 'text' => 'La agenda del taller y los datos de cada cliente, sin turnos pisados.', 'detail' => 'control-de-turnos'],
-        ['icon' => 'car', 'label' => 'Historial por patente', 'text' => 'Buscá la patente y mirá qué se le hizo al auto, con qué repuestos y cuándo.', 'detail' => 'historial-por-patente'],
+        ['icon' => 'calendar', 'label' => 'Turnos y clientes', 'text' => 'La agenda de la semana y los datos de cada cliente, con el recordatorio por WhatsApp a un toque.', 'detail' => 'control-de-turnos'],
+        ['icon' => 'car', 'label' => 'Historial por patente', 'text' => 'Buscá la patente y mirá qué se le hizo al auto, cuándo y por cuánto; en cada orden, los repuestos.', 'detail' => 'historial-por-patente'],
         ['icon' => 'package', 'label' => 'Stock de repuestos', 'text' => 'Repuestos, aceite y filtros a la vista, con aviso cuando queda poco.', 'detail' => 'control-de-stock'],
-        ['icon' => 'send', 'label' => 'Presupuestos por WhatsApp', 'text' => 'Armá el presupuesto con tus costos y mandalo al cliente para que lo apruebe.', 'detail' => 'presupuestos-por-whatsapp'],
+        ['icon' => 'send', 'label' => 'Presupuestos por WhatsApp', 'text' => 'Armá el presupuesto y mandalo al WhatsApp del cliente con un toque; cuando te dice que sí, lo aprobás.', 'detail' => 'presupuestos-por-whatsapp'],
     ];
 @endphp
 
