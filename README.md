@@ -1,8 +1,8 @@
 # Landing de IntegraTaller
 
 Sitio público de [integrataller.com](https://integrataller.com): Laravel 12 + Blade + Tailwind v4 + Vite.
-El JS vive en `resources/js/app.js` (menú, diálogo de demo, formularios), `resources/js/analytics.js`
-(medición propia y etiquetas con consentimiento) y `resources/js/precios.js` (calculadora de precios).
+El JS vive en `resources/js/app.js` (menú, diálogo de demo, formularios) y `resources/js/analytics.js`
+(medición propia y etiquetas con consentimiento).
 
 - Textos y datos editables: `config/landing.php`. Los textos que el dueño todavía tiene que confirmar
   están marcados con `TODO-CONFIRMAR` y agrupados en `copy`.
@@ -43,5 +43,5 @@ un error queda en el log y nunca rompe el formulario.
 
 ## Precios
 
-La sección de precios lee los planes del SaaS y los guarda en caché una hora (`php artisan cache:forget planes-publicos`
+La sección de precios muestra un precio fijo por plan (sin costo por sucursal ni por usuario). Lee los planes del SaaS y los guarda en caché una hora (`php artisan cache:forget planes-publicos`
 para verlos al instante). Si el SaaS no responde usa `landing.pricing_fallback`; sin respaldo, la sección no se muestra.

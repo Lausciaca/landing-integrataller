@@ -24,7 +24,9 @@ class PlanesPublicos
     private array|false|null $memo = null;
 
     /**
-     * @return array{pro: array<string, float|int|string>, corporation: ?array<string, float|int|string>, prueba_dias: int, transferencia_descuento_pct: float}|null
+     * Precio fijo por plan: sucursales y usuarios no suman.
+     *
+     * @return array{pro: array{nombre: string, precio: float, descuento_pct: float, precio_final: float}, corporation: ?array{nombre: string, precio: float, descuento_pct: float, precio_final: float}, prueba_dias: int, transferencia_descuento_pct: float}|null
      */
     public function datos(): ?array
     {
@@ -96,33 +98,6 @@ class PlanesPublicos
             'precio' => $precio,
             'descuento_pct' => $descuento,
             'precio_final' => is_numeric($plan['precio_final'] ?? null) ? (float) $plan['precio_final'] : round($precio * (1 - $descuento / 100), 2),
-            'usuarios_incluidos' => max(1, (int) ($plan['usuarios_incluidos'] ?? 1)),
-            'talleres_incluidos' => max(1, (int) ($plan['talleres_incluidos'] ?? 1)),
-            'precio_usuario_extra' => max(0.0, (float) ($plan['precio_usuario_extra'] ?? 0)),
-            'precio_taller_extra' => max(0.0, (float) ($plan['precio_taller_extra'] ?? 0)),
-        ];
-    }
-
-    /**
-     * Mismo cálculo que Suscripciones::calcularMontoEstimado del SaaS: el
-     * descuento de la beta va solo sobre la base; los extras, a precio lleno.
-     *
-     * @return array{base: float, talleres_extra: int, monto_talleres: float, usuarios_extra: int, monto_usuarios: float, total: float}
-     */
-    public static function estimar(array $plan, int $talleres = 1, int $usuarios = 1): array
-    {
-        $talleresExtra = max(0, max(1, $talleres) - $plan['talleres_incluidos']);
-        $usuariosExtra = max(0, max(1, $usuarios) - $plan['usuarios_incluidos']);
-        $montoTalleres = $talleresExtra * $plan['precio_taller_extra'];
-        $montoUsuarios = $usuariosExtra * $plan['precio_usuario_extra'];
-
-        return [
-            'base' => $plan['precio_final'],
-            'talleres_extra' => $talleresExtra,
-            'monto_talleres' => $montoTalleres,
-            'usuarios_extra' => $usuariosExtra,
-            'monto_usuarios' => $montoUsuarios,
-            'total' => round($plan['precio_final'] + $montoTalleres + $montoUsuarios, 2),
         ];
     }
 

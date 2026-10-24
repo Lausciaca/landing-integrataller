@@ -20,8 +20,6 @@ class PreciosTest extends TestCase
     {
         return $extra + [
             'nombre' => 'Pro', 'precio' => 120000, 'descuento_pct' => 40, 'precio_final' => 72000,
-            'usuarios_incluidos' => 3, 'talleres_incluidos' => 1,
-            'precio_usuario_extra' => 5000, 'precio_taller_extra' => 15000,
             'ia' => false, 'descripcion' => 'Todo IntegraTaller, sin IA.',
         ];
     }
@@ -42,9 +40,10 @@ class PreciosTest extends TestCase
         $this->assertStringContainsString("$\u{00A0}120.000", $html);
         $this->assertStringContainsString("$\u{00A0}72.000", $html);
         $this->assertStringContainsString('por mes, final', $html);
-        $this->assertStringContainsString('Incluye 1 sucursal y 3 usuarios.', $html);
-        $this->assertStringContainsString('¿Cuántas sucursales?', $html);
-        $this->assertStringContainsString('¿Cuántas personas usan el sistema?', $html);
+        // Precio fijo por plan: sin calculadora ni extras.
+        $this->assertStringContainsString('Todas tus sucursales y todo tu equipo, sin costo extra.', $html);
+        $this->assertStringNotContainsString('¿Cuántas sucursales?', $html);
+        $this->assertStringNotContainsString('extra suma', $html);
         $this->assertStringContainsString('Sin permanencia. Cancelás cuando quieras.', $html);
         $this->assertStringContainsString('data-cta="registro"', $html);
         $this->assertStringContainsString('href="https://app.integrataller.test/auth/google/redirect"', $html);
@@ -54,11 +53,10 @@ class PreciosTest extends TestCase
         // Menú, pregunta frecuente y datos estructurados.
         $this->assertMatchesRegularExpression('~href="[^"]*#precios"[^>]*>Precios</a>~', $html);
         $this->assertStringContainsString('El plan Pro sale', $html);
+        $this->assertStringContainsString('Es un precio fijo', $html);
         $this->assertStringNotContainsString('En la demo te pasamos el precio', $html);
         $this->assertStringContainsString('"offers":{"@type":"Offer","name":"Plan Pro","price":72000', $html);
         $this->assertStringContainsString('"priceCurrency":"ARS"', $html);
-        // Datos para la calculadora.
-        $this->assertStringContainsString('<script type="application/json" id="precios-datos">', $html);
         // Sin Corporation no hay segunda tarjeta.
         $this->assertStringNotContainsString('Para redes de sucursales, con IA', $html);
     }
@@ -112,21 +110,5 @@ class PreciosTest extends TestCase
         $this->app->forgetScopedInstances();
         $this->get('/')->assertOk();
         Http::assertSentCount(2);
-    }
-
-    public function test_la_estimacion_replica_la_formula_del_saas(): void
-    {
-        $plan = app(PlanesPublicos::class)->datos() ?? null;
-        $this->assertNull($plan);
-
-        // Descuento solo sobre la base; extras a precio lleno.
-        $r = PlanesPublicos::estimar(['precio_final' => 72000.0, 'talleres_incluidos' => 1, 'usuarios_incluidos' => 3, 'precio_taller_extra' => 15000.0, 'precio_usuario_extra' => 5000.0], 3, 5);
-
-        $this->assertSame(2, $r['talleres_extra']);
-        $this->assertSame(2, $r['usuarios_extra']);
-        $this->assertSame(30000.0, $r['monto_talleres']);
-        $this->assertSame(10000.0, $r['monto_usuarios']);
-        $this->assertSame(112000.0, $r['total']);
-        $this->assertSame(72000.0, PlanesPublicos::estimar(['precio_final' => 72000.0, 'talleres_incluidos' => 1, 'usuarios_incluidos' => 3, 'precio_taller_extra' => 15000.0, 'precio_usuario_extra' => 5000.0], 0, 0)['total']);
     }
 }

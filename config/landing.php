@@ -41,8 +41,6 @@ return [
     | 'pricing_fallback' => [
     |     'planes' => [[
     |         'nombre' => 'Pro', 'precio' => 0, 'descuento_pct' => 0, 'precio_final' => 0,
-    |         'usuarios_incluidos' => 3, 'talleres_incluidos' => 1,
-    |         'precio_usuario_extra' => 0, 'precio_taller_extra' => 0,
     |     ]],
     |     'prueba_dias' => 30,
     |     'transferencia_descuento_pct' => 0,
@@ -62,7 +60,7 @@ return [
         // TODO-CONFIRMAR: tiempo y horario reales de respuesta a los pedidos de demo.
         'response_time_text' => 'Te escribimos en menos de 2 horas, de lunes a sábado de 9 a 19.',
 
-        // TODO-CONFIRMAR: "Sin permanencia" (va debajo de los botones de la portada, precios y cierre).
+        // TODO-CONFIRMAR: "Sin permanencia" (va debajo de los botones de la portada y del cierre; en precios va pricing_trust_line).
         'risk_reversal' => '1 mes gratis. Sin permanencia. Cancelás cuando quieras.',
 
         // Preguntas frecuentes que dependen de definiciones del dueño.

@@ -1,5 +1,4 @@
 import { send } from './analytics';
-import { initCalculadora } from './precios';
 
 function initMobileMenu() {
     const toggle = document.querySelector('[data-menu-toggle]');
@@ -276,6 +275,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initStickyHeader();
     initScrollReveal();
     initRecorrido();
-    initCalculadora();
     initVideos();
 });
