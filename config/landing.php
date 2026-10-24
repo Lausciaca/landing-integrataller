@@ -58,7 +58,14 @@ return [
     'copy' => [
         // TODO-CONFIRMAR: ¿se puede cancelar en cualquier momento, sin permanencia mínima?
         'pricing_trust_line' => 'Sin permanencia. Cancelás cuando quieras.',
+
+        // TODO-CONFIRMAR: tiempo y horario reales de respuesta a los pedidos de demo.
+        'response_time_text' => 'Te escribimos en menos de 2 horas, de lunes a sábado de 9 a 19.',
     ],
+
+    // Agenda para elegir el horario de la demo (Google Calendar con horarios de cita o Calendly).
+    // Vacío = la página de gracias no muestra el botón.
+    'booking_url' => env('LANDING_BOOKING_URL'),
 
     'marketing_consent_version' => '2026-10-v1',
 

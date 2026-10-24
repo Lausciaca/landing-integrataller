@@ -34,6 +34,12 @@ return [
         'webhook_url' => env('LANDING_SAAS_WEBHOOK_URL'),
     ],
 
+    // Aviso inmediato de cada pedido de demo a un chat de Telegram (opcional).
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'chat_id' => env('TELEGRAM_CHAT_ID'),
+    ],
+
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),

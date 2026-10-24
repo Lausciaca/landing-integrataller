@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Support\Consent;
+use App\Support\Telefono;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -42,7 +43,7 @@ class MetaConversions
             'event_source_url' => $sourceUrl,
             'user_data' => array_filter([
                 'em' => $this->hashed(Str::lower(trim((string) ($person['email'] ?? '')))),
-                'ph' => $this->hashed($this->phone($person['phone'] ?? null)),
+                'ph' => $this->hashed(Telefono::e164($person['phone'] ?? null)),
                 'fn' => $this->hashed(Str::lower(Str::before(trim((string) ($person['name'] ?? '')), ' '))),
                 'client_ip_address' => $request->ip(),
                 'client_user_agent' => $request->userAgent(),
@@ -87,22 +88,6 @@ class MetaConversions
     private function hashed(?string $value): ?array
     {
         return $value ? [hash('sha256', $value)] : null;
-    }
-
-    /** Argentine phone in E.164 digits (54 9 + area + number) as Meta expects. */
-    private function phone(?string $phone): ?string
-    {
-        $digits = preg_replace('/\D+/', '', (string) $phone);
-        if ($digits === '' || strlen($digits) < 8) {
-            return null;
-        }
-        if (str_starts_with($digits, '54')) {
-            return $digits;
-        }
-        $digits = ltrim($digits, '0');
-        $digits = preg_replace('/^(\d{2,4})15(\d{6,8})$/', '$1$2', $digits) ?? $digits;
-
-        return strlen($digits) === 10 ? '549'.$digits : $digits;
     }
 
     private function fbc(?string $fbclid): ?string

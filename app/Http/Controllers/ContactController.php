@@ -8,6 +8,7 @@ use App\Services\AnalyticsRecorder;
 use App\Services\MetaConversions;
 use App\Services\NewsletterSubscriptionService;
 use App\Services\SaasNotifier;
+use App\Services\TelegramNotifier;
 use App\Support\Attribution;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -28,7 +29,8 @@ class ContactController extends Controller
         NewsletterSubscriptionService $newsletter,
         SaasNotifier $saas,
         AnalyticsRecorder $analytics,
-        MetaConversions $meta
+        MetaConversions $meta,
+        TelegramNotifier $telegram
     ): RedirectResponse|JsonResponse {
         if ($request->filled('website')) {
             return $this->done($request);
@@ -73,6 +75,7 @@ class ContactController extends Controller
             'source' => 'demo-form',
         ]);
         $saas->notify('demo-request.created', $contact->id);
+        $telegram->demoRequest($contact);
         $analytics->record($request, 'demo_submit', $attribution, ['path' => '/contacto']);
         $meta->send($request, 'Lead', $eventId, route('contacto'), [
             'email' => $email,
@@ -99,6 +102,8 @@ class ContactController extends Controller
         }
 
         session()->flash('newsletter_result', $subscriptionResult);
+        // The thank-you page prepares the WhatsApp message with these.
+        session()->flash('lead', ['name' => $contact->name, 'branches' => $contact->branches]);
         session()->flash('conversion', ['meta' => 'Lead', 'ga' => 'generate_lead', 'id' => $eventId]);
 
         return $this->done($request);

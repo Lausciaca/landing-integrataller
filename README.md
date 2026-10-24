@@ -1,59 +1,47 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Landing de IntegraTaller
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sitio público de [integrataller.com](https://integrataller.com): Laravel 12 + Blade + Tailwind v4 + Vite.
+El JS vive en `resources/js/app.js` (menú, diálogo de demo, formularios), `resources/js/analytics.js`
+(medición propia y etiquetas con consentimiento) y `resources/js/precios.js` (calculadora de precios).
 
-## About Laravel
+- Textos y datos editables: `config/landing.php`. Los textos que el dueño todavía tiene que confirmar
+  están marcados con `TODO-CONFIRMAR` y agrupados en `copy`.
+- Integración con la app administrativa (leads, suscriptores y analítica): [LEAD_SYNC.md](LEAD_SYNC.md).
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Desarrollo
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```bash
+composer install && npm install
+cp .env.example .env && php artisan key:generate
+php artisan migrate
+npm run dev        # o npm run build
+php artisan test
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Puesta en producción
 
-## Learning Laravel
+Variables que **tienen** que estar cargadas:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+| Variable | Para qué |
+| --- | --- |
+| `LANDING_DEMO_NOTIFICATION_EMAIL` | Email que recibe el aviso de cada pedido de demo. **Obligatoria**: si está vacía, el aviso no se envía y el lead queda esperando. Requiere también un `MAIL_MAILER` real (no `log`) y `MAIL_FROM_ADDRESS`. |
+| `LANDING_SAAS_URL` | URL del SaaS (por ejemplo `https://app.integrataller.com`). De ahí salen los precios (`/api/planes-publicos`), el alta "Probá 1 mes gratis" (`/auth/google/redirect`) y el enlace "Ingresar" (`/login`). |
+| `LANDING_API_TOKEN` y `LANDING_SAAS_WEBHOOK_URL` | Sincronización con la app administrativa (ver LEAD_SYNC.md). |
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+Opcionales:
 
-## Laravel Sponsors
+| Variable | Para qué |
+| --- | --- |
+| `LANDING_BOOKING_URL` | Agenda para elegir el horario de la demo (Google Calendar con horarios de cita o Calendly). Si tiene valor, la página de gracias muestra "Elegí el horario de tu demo". |
+| `TELEGRAM_BOT_TOKEN` y `TELEGRAM_CHAT_ID` | Aviso inmediato de cada demo por Telegram con nombre, WhatsApp clickeable, sucursales y fuente/UTM. Se crea el bot con @BotFather; el chat id sale de `https://api.telegram.org/bot<token>/getUpdates` después de escribirle al bot. Sin las dos variables no se envía nada. |
+| `META_PIXEL_ID`, `META_CAPI_TOKEN`, `META_TEST_EVENT_CODE`, `CLARITY_PROJECT_ID`, `GA4_MEASUREMENT_ID`, `GOOGLE_ADS_ID`, `GOOGLE_ADS_LEAD_LABEL` | Medición (solo con consentimiento de cookies). |
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+Después de cambiar variables: `php artisan config:cache`.
 
-### Premium Partners
+Los avisos (email, Telegram, app administrativa y Meta) se envían después de responder al visitante;
+un error queda en el log y nunca rompe el formulario.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Precios
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+La sección de precios lee los planes del SaaS y los guarda en caché una hora (`php artisan cache:forget planes-publicos`
+para verlos al instante). Si el SaaS no responde usa `landing.pricing_fallback`; sin respaldo, la sección no se muestra.
