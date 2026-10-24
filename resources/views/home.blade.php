@@ -86,13 +86,28 @@
                 <p class="t-cuerpo-chico mt-6 text-azul-100 max-sm:order-2 md:mt-10">Talleres mecánicos y de estética vehicular · En la nube · Hecho en Argentina</p>
             </div>
 
-            {{-- Captura real del tablero "Todas las sucursales" (datos ficticios de "Taller Demo") en un marco de celular hecho con CSS --}}
-            <div class="portada-entrada flex justify-center lg:justify-end">
-                <figure class="telefono w-[260px] sm:w-[290px]">
-                    <img src="{{ asset('img/producto/panel-sucursales-celular.webp') }}"
-                         alt="Tablero de IntegraTaller en el celular: órdenes por ingresar, en el taller y listas para retirar de las sucursales Centro, Norte y Sur"
-                         width="600" height="1298" decoding="async" fetchpriority="high">
-                </figure>
+            {{-- Capturas reales del tablero "Todas las sucursales" (datos ficticios de "Taller Demo"): en la computadora
+                 dentro de una ventana hecha con CSS y en el celular adelante. En pantallas chicas solo el celular, que asoma
+                 desde el borde de la portada para no alejar el contenido que sigue --}}
+            <div class="portada-entrada">
+                <div class="portada-visual">
+                    <div class="portada-brillo" aria-hidden="true"></div>
+                    <figure class="navegador">
+                        <div class="navegador-barra" aria-hidden="true">
+                            <span></span><span></span><span></span>
+                            <span class="navegador-url">{{ parse_url(config('landing.saas_url'), PHP_URL_HOST) }}</span>
+                        </div>
+                        <img src="{{ asset('img/producto/panel-sucursales-escritorio.webp') }}"
+                             alt="Tablero de IntegraTaller en la computadora: lo que hay por ingresar, en el taller, listo para retirar y por cobrar en cada sucursal"
+                             width="1440" height="900" decoding="async">
+                    </figure>
+                    <figure class="telefono">
+                        <span class="telefono-hora" aria-hidden="true">9:41</span>
+                        <img src="{{ asset('img/producto/panel-sucursales-celular.webp') }}"
+                             alt="El mismo tablero en el celular, con las sucursales Centro, Norte y Sur"
+                             width="600" height="1298" decoding="async" fetchpriority="high">
+                    </figure>
+                </div>
             </div>
         </div>
     </section>

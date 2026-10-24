@@ -16,15 +16,15 @@
             <x-logo variant="isotipo" class="h-9 md:hidden" />
         </a>
 
-        <nav class="hidden items-center gap-8 md:flex" aria-label="Principal">
+        <nav class="hidden items-center gap-8 lg:flex" aria-label="Principal">
             @foreach ($links as $link)
                 <a href="{{ $link['href'] }}" class="text-[15px] font-medium text-texto transition-colors hover:text-azul-800">{{ $link['label'] }}</a>
             @endforeach
         </nav>
 
         <div class="flex items-center gap-2">
-            {{-- Clientes actuales: entran al sistema. Discreto, para no competir con la demo --}}
-            <a href="{{ \App\Support\Saas::loginUrl() }}" class="hidden px-3 text-[15px] font-medium text-texto-secundario transition-colors hover:text-azul-800 md:inline-flex" data-cta="ingresar">Ingresar</a>
+            {{-- Clientes actuales: entran al sistema. Discreto, para no competir con la demo (en pantallas chicas va en el menú) --}}
+            <a href="{{ \App\Support\Saas::loginUrl() }}" class="hidden px-3 text-[15px] font-medium text-texto-secundario transition-colors hover:text-azul-800 lg:inline-flex" data-cta="ingresar">Ingresar</a>
             <a href="{{ route('contacto') }}" class="boton boton-principal !min-h-11 px-4 md:px-5" data-cta="demo">Pedí tu demo</a>
 
             <button type="button"
@@ -32,14 +32,14 @@
                     aria-controls="menu-movil"
                     aria-expanded="false"
                     aria-label="Abrir menú"
-                    class="inline-flex h-11 w-11 items-center justify-center rounded-md text-azul-800 transition-colors hover:bg-gris-100 md:hidden">
+                    class="inline-flex h-11 w-11 items-center justify-center rounded-md text-azul-800 transition-colors hover:bg-gris-100 lg:hidden">
                 <x-icon name="menu" data-icon-open class="h-6 w-6" />
                 <x-icon name="x" data-icon-close class="hidden h-6 w-6" />
             </button>
         </div>
     </div>
 
-    <div id="menu-movil" data-menu-panel class="hidden border-t border-borde bg-white md:hidden">
+    <div id="menu-movil" data-menu-panel class="hidden border-t border-borde bg-white lg:hidden">
         <nav class="contenedor flex flex-col py-3" aria-label="Móvil">
             @foreach ($links as $link)
                 <a href="{{ $link['href'] }}" class="rounded-md px-3 py-3 font-medium text-texto hover:bg-gris-100">{{ $link['label'] }}</a>

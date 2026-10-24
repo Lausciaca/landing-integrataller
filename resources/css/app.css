@@ -539,38 +539,194 @@
         transform: rotate(180deg);
     }
 
-    /* Marco de celular para las capturas del sistema (sin imágenes de marcas de terceros) */
-    .telefono {
+    /*
+     * Portada: capturas del sistema en marcos hechos con CSS (sin imágenes de marcas de terceros).
+     * Hasta 1023px el teléfono asoma desde el borde inferior; de 1024 a 1279px va entero a la derecha;
+     * desde 1280px, ventana de navegador atrás y celular adelante.
+     */
+    .portada-visual {
         position: relative;
+        display: flex;
+        justify-content: center;
+        height: 340px;
+        margin-bottom: -48px;
         overflow: hidden;
-        border: 10px solid var(--color-azul-900);
-        border-radius: 44px;
-        background: var(--color-azul-900);
-        box-shadow: 0 0 0 2px var(--color-azul-700), var(--shadow-3);
-        padding-top: 30px;
-        aspect-ratio: 9 / 18.5;
     }
 
+    @media (min-width: 768px) {
+        .portada-visual {
+            height: 420px;
+            margin-bottom: -80px;
+        }
+    }
+
+    @media (min-width: 1024px) {
+        .portada-visual {
+            height: auto;
+            margin-bottom: 0;
+            overflow: visible;
+        }
+    }
+
+    /* La ventana se extiende hacia el borde derecho (la portada recorta lo que sobra) */
+    @media (min-width: 1280px) {
+        .portada-visual {
+            display: block;
+            width: calc(100% + 140px);
+            height: auto;
+            margin-bottom: 0;
+            padding: 24px 0 72px 72px;
+            overflow: visible;
+        }
+    }
+
+    .portada-brillo {
+        position: absolute;
+        inset: 10% 0 -10% 10%;
+        background: radial-gradient(closest-side, rgba(30, 181, 232, 0.28), transparent);
+        filter: blur(24px);
+        pointer-events: none;
+    }
+
+    .navegador {
+        position: relative;
+        display: none;
+        overflow: hidden;
+        border-radius: var(--radius-lg);
+        background: var(--color-blanco);
+        box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 30px 60px rgba(7, 29, 64, 0.45);
+    }
+
+    @media (min-width: 1280px) {
+        .navegador {
+            display: block;
+        }
+    }
+
+    .navegador-barra {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        height: 30px;
+        background: var(--color-gris-100);
+        padding: 0 12px;
+    }
+
+    .navegador-barra > span:not(.navegador-url) {
+        width: 9px;
+        height: 9px;
+        border-radius: 999px;
+        background: var(--color-gris-200);
+    }
+
+    .navegador-url {
+        margin-left: 10px;
+        width: min(240px, 50%);
+        overflow: hidden;
+        border-radius: 999px;
+        background: var(--color-blanco);
+        padding: 0 10px;
+        color: var(--color-gris-600);
+        font-size: 11px;
+        line-height: 18px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .navegador > img {
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+
+    .telefono {
+        position: relative;
+        flex: none;
+        align-self: flex-start;
+        width: 250px;
+        border: 9px solid var(--color-azul-900);
+        border-radius: 42px;
+        /* La barra de estado toma el azul del encabezado de la app */
+        background: var(--color-azul-800);
+        box-shadow: 0 0 0 1.5px var(--color-azul-700), 0 30px 60px rgba(7, 29, 64, 0.5);
+        padding-top: 26px;
+    }
+
+    @media (min-width: 768px) {
+        .telefono {
+            width: 280px;
+        }
+    }
+
+    @media (min-width: 1280px) {
+        .telefono {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 24%;
+            min-width: 150px;
+            max-width: 190px;
+            border-width: 7px;
+            border-radius: 34px;
+            padding-top: 22px;
+        }
+
+        .telefono > img {
+            border-radius: 0 0 27px 27px;
+        }
+
+        .telefono::before {
+            top: 6px;
+            height: 11px;
+        }
+
+        .telefono-hora {
+            top: 3px;
+            left: 14px;
+            font-size: 9px;
+        }
+    }
+
+    /* Isla de la cámara */
     .telefono::before {
         position: absolute;
-        top: 8px;
+        top: 7px;
         left: 50%;
-        z-index: 1;
-        width: 30%;
-        height: 20px;
+        width: 32%;
+        height: 14px;
         border-radius: 999px;
         background: var(--color-azul-900);
         transform: translateX(-50%);
         content: '';
     }
 
+    /* Botón lateral */
+    .telefono::after {
+        position: absolute;
+        top: 22%;
+        right: -12px;
+        width: 3px;
+        height: 12%;
+        border-radius: 0 2px 2px 0;
+        background: var(--color-azul-700);
+        content: '';
+    }
+
+    .telefono-hora {
+        position: absolute;
+        top: 5px;
+        left: 18px;
+        color: var(--color-blanco);
+        font-size: 10px;
+        line-height: 18px;
+        font-weight: 500;
+    }
+
     .telefono > img {
         display: block;
         width: 100%;
-        height: 100%;
-        border-radius: 0 0 34px 34px;
-        object-fit: cover;
-        object-position: top;
+        height: auto;
+        border-radius: 0 0 33px 33px;
     }
 
     /* Recurso gráfico de la marca: el isotipo ampliado (components/nodos) */
