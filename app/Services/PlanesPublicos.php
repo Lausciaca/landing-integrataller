@@ -26,7 +26,7 @@ class PlanesPublicos
     /**
      * Precio fijo por plan: sucursales y usuarios no suman.
      *
-     * @return array{pro: array{nombre: string, precio: float, descuento_pct: float, precio_final: float}, corporation: ?array{nombre: string, precio: float, descuento_pct: float, precio_final: float}, prueba_dias: int, transferencia_descuento_pct: float}|null
+     * @return array{pro: array{nombre: string, precio: float, descuento_pct: float, precio_final: float, ia_consultas: int}, corporation: ?array{nombre: string, precio: float, descuento_pct: float, precio_final: float, ia_consultas: int}, prueba_dias: int, transferencia_descuento_pct: float}|null
      */
     public function datos(): ?array
     {
@@ -98,6 +98,7 @@ class PlanesPublicos
             'precio' => $precio,
             'descuento_pct' => $descuento,
             'precio_final' => is_numeric($plan['precio_final'] ?? null) ? (float) $plan['precio_final'] : round($precio * (1 - $descuento / 100), 2),
+            'ia_consultas' => max(0, (int) ($plan['ia_consultas'] ?? 0)),
         ];
     }
 

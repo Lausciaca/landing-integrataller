@@ -40,6 +40,9 @@ class PreciosTest extends TestCase
         $this->assertStringContainsString("$\u{00A0}120.000", $html);
         $this->assertStringContainsString("$\u{00A0}72.000", $html);
         $this->assertStringContainsString('por mes, final', $html);
+        // Ahorro de la beta calculado con los precios del plan.
+        $this->assertStringContainsString("Ahorrás $\u{00A0}48.000 por mes", $html);
+        $this->assertStringContainsString('Empezás sin tarjeta', $html);
         // Precio fijo por plan: sin calculadora ni extras.
         $this->assertStringContainsString('Todas tus sucursales y todo tu equipo, sin costo extra.', $html);
         $this->assertStringNotContainsString('¿Cuántas sucursales?', $html);
@@ -58,19 +61,20 @@ class PreciosTest extends TestCase
         $this->assertStringContainsString('"offers":{"@type":"Offer","name":"Plan Pro","price":72000', $html);
         $this->assertStringContainsString('"priceCurrency":"ARS"', $html);
         // Sin Corporation no hay segunda tarjeta.
-        $this->assertStringNotContainsString('Para redes de sucursales, con IA', $html);
+        $this->assertStringNotContainsString('Plan Corporation', $html);
     }
 
     public function test_corporation_y_transferencia_se_muestran_si_el_saas_los_informa(): void
     {
         $this->saasResponde(
-            [$this->pro(), $this->pro(['nombre' => 'Corporation', 'precio' => 200000, 'precio_final' => 120000, 'ia' => true])],
+            [$this->pro(), $this->pro(['nombre' => 'Corporation', 'precio' => 200000, 'precio_final' => 120000, 'ia' => true, 'ia_consultas' => 2000])],
             ['transferencia_descuento_pct' => 10],
         );
 
         $this->get('/')->assertOk()
             ->assertSee('Plan Corporation')
-            ->assertSee('Para redes de sucursales, con IA.')
+            ->assertSee('Para redes de sucursales que quieren sumar inteligencia artificial.')
+            ->assertSee('2.000 consultas de IA por mes')
             ->assertSee('10% menos pagando por transferencia');
     }
 

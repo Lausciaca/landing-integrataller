@@ -867,6 +867,12 @@
         background: radial-gradient(120% 90% at 0% 0%, var(--color-azul-700) 0%, var(--color-azul-800) 55%, var(--color-azul-900) 100%);
     }
 
+    /* Plan destacado en la sección de precios: mismo degradé que la tarjeta destacada de funciones */
+    .precio-destacado {
+        background: radial-gradient(120% 90% at 0% 0%, var(--color-azul-700) 0%, var(--color-azul-800) 55%, var(--color-azul-900) 100%);
+        box-shadow: var(--shadow-3);
+    }
+
     /* Recorte de pantalla del sistema dentro de cada tarjeta */
     .funcion-vista {
         border: 1px solid var(--color-borde);
