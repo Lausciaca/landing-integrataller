@@ -44,7 +44,7 @@ La app administrativa debe llamar este endpoint cuando alguien se dé de baja de
 
 Eventos de la analítica propia (anónima, sin cookies ni IP). Son de solo agregado, así que se leen por id: `after_id` (último id recibido, por defecto 0) y `limit` (1 a 1000, por defecto 500). Mientras `pagination.has_more` sea `true`, pedir de nuevo con `after_id=pagination.last_id`.
 
-Cada evento trae `id`, `occurred_at`, `session_id`, `visitor_hash` (rota cada día), `type`, `path`, `landing_page`, `referrer_host`, `utm_*`, `click_id` (`fbclid`/`gclid`), `device`, `browser`, `os`, `label` y `value`. Tipos: `pageview`, `cta_click`, `whatsapp_click`, `form_start`, `scroll` (value = 25/50/75/100), `engagement` (value = segundos visibles), `demo_submit` y `newsletter_submit`. La respuesta incluye `tags` con las etiquetas configuradas (Meta Pixel, Conversions API, Clarity, GA4). La landing borra los eventos de más de 90 días.
+Cada evento trae `id`, `occurred_at`, `session_id`, `visitor_hash` (rota cada día), `type`, `path`, `landing_page`, `referrer_host`, `utm_*`, `click_id` (`fbclid`/`gclid`), `device`, `browser`, `os`, `label` y `value`. Tipos: `pageview`, `cta_click`, `whatsapp_click`, `signup_click` (clic en "Probá 1 mes gratis", que lleva al alta del SaaS), `form_start`, `form_error`, `scroll` (value = 25/50/75/100), `engagement` (value = segundos visibles), `demo_submit` y `newsletter_submit`. La respuesta incluye `tags` con las etiquetas configuradas (Meta Pixel, Conversions API, Clarity, GA4). La landing borra los eventos de más de 90 días.
 
 `GET /demo-requests` incluye además `attribution` (sesión, página de entrada, referente, UTM y click id) de cada solicitud.
 

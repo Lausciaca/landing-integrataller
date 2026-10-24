@@ -101,6 +101,16 @@ class AnalyticsTest extends TestCase
         $this->assertSame(3600, AnalyticsEvent::where('type', 'engagement')->value('value'));
     }
 
+    public function test_signup_click_is_an_accepted_event(): void
+    {
+        $this->beacon(['t' => 'signup_click', 'p' => '/', 'a' => $this->attribution(), 'l' => 'Probá 1 mes gratis'])->assertNoContent();
+
+        $event = AnalyticsEvent::sole();
+        $this->assertSame('signup_click', $event->type);
+        $this->assertSame('Probá 1 mes gratis', $event->label);
+        $this->assertSame('Video taller', $event->utm_content);
+    }
+
     public function test_browsing_beacons_do_not_use_up_the_demo_form_rate_limit(): void
     {
         foreach (range(1, 15) as $i) {

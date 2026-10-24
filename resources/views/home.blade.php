@@ -70,9 +70,12 @@
                 <p class="mt-5 max-w-[32rem] text-azul-100 max-sm:order-1 md:mt-6 md:text-[18px] md:leading-7">
                     Órdenes de trabajo, clientes y finanzas centralizados. Sabé qué pasa en cada taller sin tener que estar ahí.
                 </p>
-                <div class="mt-5 flex flex-col gap-3 sm:flex-row md:mt-9">
-                    <a href="{{ route('contacto') }}" class="boton boton-claro" data-cta="demo">Pedí tu demo</a>
-                    <a href="#como-funciona" class="boton boton-borde-claro">Ver cómo funciona</a>
+                <div class="mt-5 md:mt-9">
+                    <div class="flex flex-col gap-3 sm:flex-row">
+                        <a href="{{ route('contacto') }}" class="boton boton-claro" data-cta="demo">Pedí tu demo</a>
+                        <a href="{{ \App\Support\Saas::signupUrl() }}" class="boton boton-borde-claro" data-cta="registro" data-registro>Probá 1 mes gratis</a>
+                    </div>
+                    <a href="#como-funciona" class="t-cuerpo-chico mt-3 inline-flex items-center gap-1 font-medium text-azul-100 underline underline-offset-4 hover:text-white">Ver cómo funciona</a>
                 </div>
                 <p class="t-cuerpo-chico mt-6 text-azul-100 max-sm:order-2 md:mt-10">Talleres mecánicos y de estética vehicular · En la nube · Hecho en Argentina</p>
             </div>
@@ -350,7 +353,10 @@
             <p class="t-etiqueta !text-celeste-400">IntegraTaller</p>
             <h2 id="cierre-title" class="t-display mt-4 !text-white">Tu taller, en orden.</h2>
             <p class="t-cuerpo-grande mt-4 max-w-[36rem] text-azul-100">Todas tus sucursales, un solo sistema. Te mostramos cómo funciona con el trabajo de tu taller.</p>
-            <a href="{{ route('contacto') }}" class="boton boton-claro mt-8 w-full sm:w-auto" data-cta="demo">Pedí tu demo</a>
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                <a href="{{ route('contacto') }}" class="boton boton-claro" data-cta="demo">Pedí tu demo</a>
+                <a href="{{ \App\Support\Saas::signupUrl() }}" class="boton boton-borde-claro" data-cta="registro" data-registro>Probá 1 mes gratis</a>
+            </div>
         </div>
     </section>
 @endsection

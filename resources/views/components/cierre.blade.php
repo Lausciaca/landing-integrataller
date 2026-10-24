@@ -7,6 +7,9 @@
             <h2 class="t-titulo-1 !text-white">{{ $title }}</h2>
             <p class="t-cuerpo-grande mt-3 text-azul-100">{{ $text }}</p>
         </div>
-        <a href="{{ route('contacto') }}" class="boton boton-claro shrink-0" data-cta="demo">Pedí tu demo</a>
+        <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
+            <a href="{{ route('contacto') }}" class="boton boton-claro" data-cta="demo">Pedí tu demo</a>
+            <a href="{{ \App\Support\Saas::signupUrl() }}" class="boton boton-borde-claro" data-cta="registro" data-registro>Probá 1 mes gratis</a>
+        </div>
     </div>
 </section>

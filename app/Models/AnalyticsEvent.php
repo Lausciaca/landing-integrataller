@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class AnalyticsEvent extends Model
 {
     /** Events sent by the browser beacon. */
-    public const CLIENT_TYPES = ['pageview', 'cta_click', 'whatsapp_click', 'form_start', 'form_error', 'scroll', 'engagement'];
+    public const CLIENT_TYPES = ['pageview', 'cta_click', 'whatsapp_click', 'signup_click', 'form_start', 'form_error', 'scroll', 'engagement'];
 
     /** Conversions recorded by the server once the form is accepted. */
     public const SERVER_TYPES = ['demo_submit', 'newsletter_submit'];

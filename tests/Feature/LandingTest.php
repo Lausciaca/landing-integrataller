@@ -68,15 +68,34 @@ class LandingTest extends TestCase
         $response->assertSee('FAQPage', false);
     }
 
-    public function test_home_shows_audience_and_offer_without_the_self_service_link(): void
+    public function test_home_shows_audience_offer_and_the_self_service_signup(): void
     {
-        $this->get('/')
+        config(['landing.saas_url' => 'https://app.integrataller.com']);
+
+        $html = $this->get('/')
             ->assertOk()
             ->assertSee('Para talleres con varias sucursales o equipos de 4 o más')
             ->assertSee('1 mes gratis + 50% en la beta')
             ->assertSee('data-demo-dialog', false)
-            ->assertDontSee('app.integrataller.com')
-            ->assertDontSee('cotizador');
+            ->assertDontSee('cotizador')
+            ->getContent();
+
+        // Portada: la demo sigue siendo el principal; el alta es el segundo botón y "Ver cómo funciona" pasa a enlace.
+        $this->assertStringContainsString('class="boton boton-claro" data-cta="demo">Pedí tu demo</a>', $html);
+        $this->assertStringContainsString('href="https://app.integrataller.com/auth/google/redirect" class="boton boton-borde-claro" data-cta="registro" data-registro>Probá 1 mes gratis</a>', $html);
+        $this->assertStringContainsString('>Ver cómo funciona</a>', $html);
+        $this->assertStringNotContainsString('class="boton boton-borde-claro">Ver cómo funciona', $html);
+        // Clientes actuales: "Ingresar" en el encabezado y en el menú del celular.
+        $this->assertSame(2, substr_count($html, 'href="https://app.integrataller.com/login"'));
+        // Diálogo de demo con la alternativa del alta.
+        $this->assertStringContainsString('¿Preferís empezar solo?', $html);
+    }
+
+    public function test_closing_block_on_inner_pages_offers_both_buttons(): void
+    {
+        $this->get('/servicios')->assertOk()
+            ->assertSee('data-cta="registro" data-registro>Probá 1 mes gratis</a>', false)
+            ->assertSee('data-cta="demo">Pedí tu demo</a>', false);
     }
 
     public function test_whatsapp_links_open_the_conversation_with_the_demo_message(): void

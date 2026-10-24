@@ -278,6 +278,19 @@ function initTracking() {
         input.value = JSON.stringify(attribution);
     });
 
+    // "Probá 1 mes gratis": el alta del SaaS recibe los UTM de la visita para no perder la atribución.
+    document.querySelectorAll('a[data-registro]').forEach((link) => {
+        try {
+            const url = new URL(link.href);
+            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content'].forEach((key) => {
+                if (attribution[key]) url.searchParams.set(key, attribution[key]);
+            });
+            link.href = url.toString();
+        } catch {
+            // URL inválida: el enlace queda como está.
+        }
+    });
+
     document.addEventListener('click', (event) => {
         const target = event.target.closest?.('a, button');
         if (!target) return;
@@ -288,6 +301,11 @@ function initTracking() {
             const eventId = uuid();
             send('whatsapp_click', { l: text || 'WhatsApp', e: eventId });
             reportConversion('Contact', 'contact', eventId);
+        } else if (target.closest('[data-registro]')) {
+            // Alta autogestionada: InitiateCheckout en Meta y begin_checkout en GA4, con consentimiento.
+            const eventId = uuid();
+            send('signup_click', { l: text || 'Probá 1 mes gratis', e: eventId });
+            reportConversion('InitiateCheckout', 'begin_checkout', eventId);
         } else if (target.closest('[data-cta]')) {
             const cta = target.closest('[data-cta]');
             send('cta_click', { l: `${cta.dataset.cta}: ${text}`.slice(0, 150) });

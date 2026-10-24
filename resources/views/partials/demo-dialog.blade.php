@@ -16,5 +16,10 @@
         <div class="mt-6">
             @include('partials.demo-form', ['prefijo' => 'dialogo-'])
         </div>
+
+        <p class="mt-5 border-t border-borde pt-5 text-center text-texto-secundario">
+            ¿Preferís empezar solo?
+            <a href="{{ \App\Support\Saas::signupUrl() }}" class="enlace" data-cta="registro" data-registro>Probá 1 mes gratis</a>
+        </p>
     </div>
 </dialog>

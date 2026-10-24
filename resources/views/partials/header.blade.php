@@ -24,6 +24,8 @@
         </nav>
 
         <div class="flex items-center gap-2">
+            {{-- Clientes actuales: entran al sistema. Discreto, para no competir con la demo --}}
+            <a href="{{ \App\Support\Saas::loginUrl() }}" class="hidden px-3 text-[15px] font-medium text-texto-secundario transition-colors hover:text-azul-800 md:inline-flex" data-cta="ingresar">Ingresar</a>
             <a href="{{ route('contacto') }}" class="boton boton-principal !min-h-11 px-4 md:px-5" data-cta="demo">Pedí tu demo</a>
 
             <button type="button"
@@ -43,7 +45,8 @@
             @foreach ($links as $link)
                 <a href="{{ $link['href'] }}" class="rounded-md px-3 py-3 font-medium text-texto hover:bg-gris-100">{{ $link['label'] }}</a>
             @endforeach
-            <a href="{{ route('contacto') }}" class="rounded-md px-3 py-3 font-medium text-texto hover:bg-gris-100">Contacto</a>
+            <a href="{{ route('contacto') }}" class="rounded-md px-3 py-3 font-medium text-texto hover:bg-gris-100" data-cta="demo">Pedí tu demo</a>
+            <a href="{{ \App\Support\Saas::loginUrl() }}" class="mt-2 rounded-md border-t border-borde px-3 py-3 font-medium text-texto-secundario hover:bg-gris-100" data-cta="ingresar">Ingresar</a>
         </nav>
     </div>
 </header>
