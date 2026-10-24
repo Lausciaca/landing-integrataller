@@ -35,6 +35,7 @@
         'caja' => ['icon' => 'wallet', 'name' => 'Caja y finanzas', 'text' => 'Cobros, pagos y deudas de cada sucursal. Sabé cuánto facturaste hoy.'],
         'reportes' => ['icon' => 'bar-chart', 'name' => 'Reportes', 'text' => 'Facturación, órdenes y trabajos por sucursal, por período y por persona.'],
         'equipo' => ['icon' => 'users', 'name' => 'Equipo y permisos', 'text' => 'Cada persona ve y hace lo que le corresponde: dueño, encargado o recepción.'],
+        'presupuestos' => ['icon' => 'send', 'name' => 'Presupuestos por WhatsApp', 'text' => 'Armás el presupuesto y se lo mandás con un toque: le llega el link al PDF. Cuando te dice que sí, lo aprobás y queda listo para cobrar.'],
     ];
 
     $steps = [
@@ -80,10 +81,14 @@
                 <p class="t-cuerpo-chico mt-6 text-azul-100 max-sm:order-2 md:mt-10">Talleres mecánicos y de estética vehicular · En la nube · Hecho en Argentina</p>
             </div>
 
-            <x-nodos animado
-                     class="mx-auto w-full max-w-[600px] pr-5 sm:px-6 lg:px-0"
-                     style="--nodos-base: var(--color-blanco); --nodos-acento: var(--color-celeste-400)"
-                     :etiquetas="[['Sucursal Centro', 'Órdenes al día'], ['Sucursal Norte', 'Caja al día'], ['Sucursal Sur', 'Equipo en marcha']]" />
+            {{-- Captura real del tablero "Todas las sucursales" (datos ficticios de "Taller Demo") en un marco de celular hecho con CSS --}}
+            <div class="portada-entrada flex justify-center lg:justify-end">
+                <figure class="telefono w-[260px] sm:w-[290px]">
+                    <img src="{{ asset('img/producto/panel-sucursales-celular.webp') }}"
+                         alt="Tablero de IntegraTaller en el celular: órdenes por ingresar, en el taller y listas para retirar de las sucursales Centro, Norte y Sur"
+                         width="600" height="1298" decoding="async" fetchpriority="high">
+                </figure>
+            </div>
         </div>
     </section>
 
@@ -162,7 +167,7 @@
                 </a>
             </div>
 
-            {{-- Cada tarjeta lleva una vista de ejemplo del sistema (decorativa, con datos inventados) --}}
+            {{-- Capturas reales del sistema con datos ficticios ("Taller Demo"); reportes y equipo siguen con vistas de ejemplo --}}
             <div class="funciones-grilla mt-10 grid gap-4 md:mt-12 md:grid-cols-2 md:gap-5 lg:grid-cols-6">
                 {{-- Sucursales: la idea central de la marca --}}
                 <article data-revelar class="funcion funcion-destacada flex flex-col overflow-hidden p-6 text-white sm:p-8 md:col-span-2 md:min-h-[380px] md:p-10 lg:col-span-3 lg:row-span-2">
@@ -186,36 +191,19 @@
                     <p class="t-etiqueta">{{ $features['ordenes']['name'] }}</p>
                     <h3 class="t-titulo-3 mt-3">Cada trabajo sabe en qué está.</h3>
                     <p class="mt-2 text-texto-secundario">{{ $features['ordenes']['text'] }}</p>
-                    <div class="funcion-vista mt-6" aria-hidden="true">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <span class="t-cuerpo-chico font-medium text-azul-800">Orden 1043 · Toyota Hilux</span>
-                            <x-estado tipo="info">En proceso</x-estado>
-                        </div>
-                        <div class="mt-3 flex gap-1">
-                            @foreach (range(1, 5) as $i)
-                                <span @class(['h-1.5 flex-1 rounded-full', 'bg-azul-800' => $i <= 3, 'bg-gris-200' => $i > 3])></span>
-                            @endforeach
-                        </div>
-                        <p class="t-cuerpo-chico mt-2 text-texto-secundario">Paso 3 de 5 · Asignada a Martín</p>
+                    <div class="funcion-vista mt-6 overflow-hidden !p-0">
+                        <img src="{{ asset('img/producto/orden-de-trabajo.webp') }}" alt="Orden de trabajo en IntegraTaller: estado, presupuesto aprobado, saldo pendiente y datos del cliente" width="1200" height="665" loading="lazy" decoding="async" class="w-full">
                     </div>
                 </article>
 
-                <article data-revelar class="funcion flex flex-col gap-6 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8 md:flex-col md:items-start lg:col-span-3 lg:flex-row lg:items-center">
+                <article data-revelar class="funcion flex flex-col gap-6 p-6 sm:p-8 lg:col-span-3">
                     <div>
                         <p class="t-etiqueta">{{ $features['clientes']['name'] }}</p>
                         <h3 class="t-titulo-3 mt-3">La patente cuenta la historia.</h3>
                         <p class="mt-2 text-texto-secundario">{{ $features['clientes']['text'] }}</p>
                     </div>
-                    <div class="funcion-vista w-full shrink-0 sm:w-[220px] md:w-full lg:w-[220px]" aria-hidden="true">
-                        <div class="patente">
-                            <span class="patente-banda">Argentina</span>
-                            <span class="patente-numero !text-[24px] !leading-[30px]">AE 482 KD</span>
-                        </div>
-                        <ul class="t-cuerpo-chico mt-3 divide-y divide-gris-100">
-                            @foreach ([['20/10', 'Pastillas y discos'], ['12/09', 'Service 40.000 km'], ['03/06', 'Cubiertas nuevas']] as [$fecha, $trabajo])
-                                <li class="flex gap-3 py-1.5"><span class="tabular-nums text-texto-secundario">{{ $fecha }}</span>{{ $trabajo }}</li>
-                            @endforeach
-                        </ul>
+                    <div class="funcion-vista w-full overflow-hidden !p-0">
+                        <img src="{{ asset('img/producto/historial-patente.webp') }}" alt="Ficha de un vehículo por patente con su libreta de servicios: fechas, kilómetros, trabajos y montos" width="1200" height="780" loading="lazy" decoding="async" class="w-full">
                     </div>
                 </article>
 
@@ -228,11 +216,13 @@
                         <h3 class="t-titulo-3 mt-5">{{ $features[$key]['name'] }}</h3>
                         <p class="mt-2 text-texto-secundario">{{ $features[$key]['text'] }}</p>
 
+                        @if ($key === 'caja')
+                            <div class="mt-auto pt-6"><div class="funcion-vista overflow-hidden !p-0">
+                                <img src="{{ asset('img/producto/caja-del-dia.webp') }}" alt="Caja del día de una sucursal: ingresos y egresos con su detalle" width="800" height="195" loading="lazy" decoding="async" class="w-full">
+                            </div></div>
+                        @else
                         <div class="mt-auto pt-6" aria-hidden="true"><div class="funcion-vista">
-                            @if ($key === 'caja')
-                                <p class="t-cuerpo-chico text-texto-secundario">Cobrado hoy · Norte</p>
-                                <p class="t-dato-grande mt-1 tabular-nums text-azul-800">$ 860.500</p>
-                            @elseif ($key === 'reportes')
+                            @if ($key === 'reportes')
                                 <ul class="grid gap-2">
                                     @foreach ([['Centro', 100], ['Norte', 72], ['Sur', 44]] as [$sede, $ancho])
                                         <li class="t-cuerpo-chico grid grid-cols-[3.5rem_1fr] items-center gap-3">
@@ -252,8 +242,21 @@
                                 </ul>
                             @endif
                         </div></div>
+                        @endif
                     </article>
                 @endforeach
+
+                {{-- Presupuestos por WhatsApp: el link al PDF sale con un toque; la aprobación se marca en el sistema --}}
+                <article data-revelar class="funcion flex flex-col gap-6 p-6 sm:p-8 md:col-span-2 lg:col-span-6 lg:flex-row lg:items-center lg:gap-10">
+                    <div class="lg:max-w-[380px]">
+                        <p class="t-etiqueta">{{ $features['presupuestos']['name'] }}</p>
+                        <h3 class="t-titulo-3 mt-3">El presupuesto le llega al cliente por WhatsApp.</h3>
+                        <p class="mt-2 text-texto-secundario">{{ $features['presupuestos']['text'] }}</p>
+                    </div>
+                    <div class="funcion-vista w-full overflow-hidden !p-0 lg:flex-1">
+                        <img src="{{ asset('img/producto/presupuesto-whatsapp.webp') }}" alt="Presupuesto en IntegraTaller con los botones Aprobar, Enviar al cliente por WhatsApp y Ver PDF" width="1000" height="244" loading="lazy" decoding="async" class="w-full">
+                    </div>
+                </article>
             </div>
         </div>
     </section>
