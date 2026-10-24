@@ -61,6 +61,51 @@ return [
 
         // TODO-CONFIRMAR: tiempo y horario reales de respuesta a los pedidos de demo.
         'response_time_text' => 'Te escribimos en menos de 2 horas, de lunes a sábado de 9 a 19.',
+
+        // TODO-CONFIRMAR: "Sin permanencia" (va debajo de los botones de la portada, precios y cierre).
+        'risk_reversal' => '1 mes gratis. Sin permanencia. Cancelás cuando quieras.',
+
+        // Preguntas frecuentes que dependen de definiciones del dueño.
+        'faq' => [
+            // TODO-CONFIRMAR: ¿hay contrato o permanencia mínima?
+            'permanencia' => 'No. Pagás mes a mes y cancelás cuando quieras.',
+            // TODO-CONFIRMAR: el dueño todavía no definió si el sistema emite factura electrónica de ARCA.
+            'arca' => 'Escribinos por WhatsApp y te contamos cómo encaja la facturación de tu taller con IntegraTaller.',
+            // TODO-CONFIRMAR: política de respaldos y de entrega de datos al darse de baja.
+            // Verificado en el SaaS: el dueño descarga los movimientos de Finanzas y la cuenta corriente;
+            // clientes, vehículos y órdenes se exportan en CSV desde el panel de IntegraTaller.
+            'datos' => 'Tus datos son tuyos. Desde el sistema descargás los movimientos de caja y la cuenta corriente, y si los necesitás te pasamos tus clientes, vehículos y órdenes en una planilla.',
+            // TODO-CONFIRMAR: qué pasa si se corta internet.
+            'internet' => 'IntegraTaller funciona en la nube, así que necesita conexión. Si se corta internet en el taller, podés seguir desde el celular con datos móviles.',
+        ],
+    ],
+
+    /*
+    | Video de "Cómo funciona": un .mp4 propio o un enlace de YouTube. Vacío =
+    | no se muestra. El póster es la imagen que se ve antes de reproducir.
+    */
+    // TODO-CONFIRMAR: falta grabar el video del recorrido.
+    'video_url' => env('LANDING_VIDEO_URL'),
+    'video_poster' => env('LANDING_VIDEO_POSTER', 'img/producto/panel-sucursales-escritorio.webp'),
+
+    /*
+    | Testimonios de la home. Solo datos reales y aprobados por el cliente.
+    | Campos: quote, company, company_role, name (nombre y apellido), role
+    | (cargo), size (sucursales o empleados), photo (ruta en public/, .webp)
+    | y video_url (opcional, mp4 o YouTube).
+    */
+    'testimonials' => [
+        [
+            'quote' => 'Antes, para saber en qué estaba cada auto había que preguntar en el taller. Ahora lo veo en el celular antes de llegar.',
+            'company' => 'Taller Sciaca',
+            'company_role' => 'Servicios para automotores',
+            // TODO-CONFIRMAR: falta la aprobación de Taller Sciaca para mostrar nombre, cargo, tamaño, foto y video.
+            'name' => null,
+            'role' => null,
+            'size' => null,
+            'photo' => null,
+            'video_url' => null,
+        ],
     ],
 
     // Agenda para elegir el horario de la demo (Google Calendar con horarios de cita o Calendly).

@@ -22,11 +22,7 @@
         ['icon' => 'wallet', 'when' => 'Martes 18:20', 'title' => 'Cobro y cierre', 'text' => 'El pago ingresa a la caja de la sucursal Norte y la orden se cierra con todo su historial.', 'status' => 'Cerrado', 'tone' => 'cerrado'],
     ];
 
-    $testimonial = [
-        'quote' => 'Antes, para saber en qué estaba cada auto había que preguntar en el taller. Ahora lo veo en el celular antes de llegar.',
-        'author' => 'Taller Sciaca',
-        'role' => 'Servicios para automotores',
-    ];
+    $testimonial = collect(config('landing.testimonials', []))->first(fn ($t) => filled($t['quote'] ?? null));
 
     $features = [
         'sucursales' => ['icon' => 'store', 'name' => 'Varias sucursales', 'text' => 'Todas tus sedes en un mismo sistema, con la información separada y comparable. Mirá una por una o todas juntas.'],
@@ -52,8 +48,15 @@
         $precios
             ? ['q' => '¿Cuánto cuesta?', 'a' => 'El plan '.$precios['pro']['nombre'].' sale '.\App\Services\PlanesPublicos::pesos($precios['pro']['precio_final']).' por mes, final, con el precio de la beta'.($precios['pro']['descuento_pct'] > 0 ? ' (lista: '.\App\Services\PlanesPublicos::pesos($precios['pro']['precio']).')' : '').'. Suma según tus sucursales y las personas que lo usan: en la sección de precios calculás el total de tu taller.', 'precios' => true]
             : ['q' => '¿Cuánto cuesta?', 'a' => 'Depende de la cantidad de sucursales y personas. En la beta tenés 1 mes gratis y 50% de descuento. Escribinos y te pasamos el precio exacto para tu taller.', 'whatsapp' => true],
+        ['q' => '¿Cómo funciona el mes gratis?', 'a' => 'Te registrás con tu cuenta de Google, cargás tu tarjeta en MercadoPago y no te cobramos nada por '.(($precios['prueba_dias'] ?? 0) > 0 ? $precios['prueba_dias'] : 30).' días. Si no te sirve, cancelás antes y no pagás nada.'],
+        ['q' => '¿Tengo que firmar un contrato o hay permanencia?', 'a' => config('landing.copy.faq.permanencia')],
+        ['q' => 'Tengo todo en Excel o en otro sistema, ¿cómo paso mis datos?', 'a' => 'Te acompañamos en la carga: sucursales, equipo, clientes y servicios, como contamos en "Cómo empezar". No arrancás de cero solo.'],
+        ['q' => '¿Emite factura electrónica de ARCA?', 'a' => config('landing.copy.faq.arca'), 'whatsapp' => true],
+        ['q' => '¿Qué pasa con mis datos? ¿Puedo exportarlos?', 'a' => config('landing.copy.faq.datos')],
+        ['q' => '¿Qué pasa si se corta internet?', 'a' => config('landing.copy.faq.internet')],
         ['q' => '¿Puedo recibir consejos aunque todavía no quiera una demo?', 'a' => 'Sí. Suscribite a la guía mensual al pie de esta página: confirmás tu email y te das de baja cuando quieras.'],
     ];
+    $riesgo = config('landing.copy.risk_reversal');
 @endphp
 
 @section('content')
@@ -76,7 +79,9 @@
                         <a href="{{ route('contacto') }}" class="boton boton-claro" data-cta="demo">Pedí tu demo</a>
                         <a href="{{ \App\Support\Saas::signupUrl() }}" class="boton boton-borde-claro" data-cta="registro" data-registro>Probá 1 mes gratis</a>
                     </div>
-                    <a href="#como-funciona" class="t-cuerpo-chico mt-3 inline-flex items-center gap-1 font-medium text-azul-100 underline underline-offset-4 hover:text-white">Ver cómo funciona</a>
+                    {{-- TODO-CONFIRMAR: "Sin permanencia" (texto en config/landing.php, copy.risk_reversal) --}}
+                    <p class="t-cuerpo-chico mt-3 text-azul-100">{{ $riesgo }}</p>
+                    <a href="#como-funciona" class="t-cuerpo-chico mt-2 inline-flex items-center gap-1 font-medium text-azul-100 underline underline-offset-4 hover:text-white">Ver cómo funciona</a>
                 </div>
                 <p class="t-cuerpo-chico mt-6 text-azul-100 max-sm:order-2 md:mt-10">Talleres mecánicos y de estética vehicular · En la nube · Hecho en Argentina</p>
             </div>
@@ -153,6 +158,10 @@
                 @endforeach
                 </ol>
             </div>
+
+            @if (filled(config('landing.video_url')))
+                @include('partials.video', ['url' => config('landing.video_url'), 'poster' => config('landing.video_poster')])
+            @endif
         </div>
     </section>
 
@@ -261,17 +270,57 @@
         </div>
     </section>
 
+    {{-- Beneficios en plata: lo que el sistema hace de verdad (verificado en el SaaS) --}}
+    <section class="seccion bg-azul-50" aria-labelledby="plata-title">
+        <div class="contenedor">
+            <x-section-heading data-revelar id="plata-title" eyebrow="Plata y control" title="Lo que hoy se te escapa, ahora queda a la vista." />
+            <ul class="mt-10 grid gap-5 md:mt-12 md:grid-cols-3">
+                @foreach ([
+                    ['icon' => 'wallet', 'title' => 'Ninguna orden se te pasa sin cobrar.', 'text' => 'Cada orden muestra lo que falta cobrar y el tablero suma lo pendiente de todas las sucursales. Filtrás las órdenes con saldo y cobrás.'],
+                    ['icon' => 'send', 'title' => 'Presupuestos que salen por WhatsApp en el momento.', 'text' => 'El cliente recibe el link al presupuesto en su WhatsApp. Cuando te dice que sí, lo aprobás con un toque y el trabajo arranca.'],
+                    ['icon' => 'banknote', 'title' => 'La caja de cada sucursal, al día.', 'text' => 'Ingresos, egresos y el efectivo que tiene que haber en el cajón. Cerrás el día y comparás con lo contado.'],
+                ] as $beneficio)
+                    <li data-revelar class="tarjeta">
+                        <x-icon :name="$beneficio['icon']" class="h-7 w-7 text-celeste-700" />
+                        <h3 class="t-titulo-3 mt-4">{{ $beneficio['title'] }}</h3>
+                        <p class="mt-2 text-texto-secundario">{{ $beneficio['text'] }}</p>
+                    </li>
+                @endforeach
+            </ul>
+            <p data-revelar class="t-titulo-3 mt-10 text-azul-800 md:mt-12">Con recuperar un trabajo sin cobrar por mes, el sistema se paga solo.</p>
+        </div>
+    </section>
+
     {{-- Talleres que confían --}}
     <section id="clientes" class="seccion border-y border-borde bg-gris-50" aria-labelledby="clientes-title">
         <div class="contenedor grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-16">
+            {{-- Testimonio desde config('landing.testimonials'): foto, nombre, cargo, tamaño y video se muestran cuando estén cargados --}}
             <figure data-revelar>
                 <h2 id="clientes-title" class="t-etiqueta">Talleres que confían</h2>
-                <blockquote class="mt-6 text-[22px] font-medium leading-[32px] tracking-[-0.01em] text-azul-800 before:mb-5 before:block before:text-[72px] before:font-bold before:leading-[0.6] before:text-celeste-500 before:content-['“'] md:text-[30px] md:leading-[42px]">
-                    {{ $testimonial['quote'] }}
-                </blockquote>
-                <figcaption class="mt-6 text-texto-secundario">
-                    <span class="font-bold text-azul-800">{{ $testimonial['author'] }}</span> · {{ $testimonial['role'] }}
-                </figcaption>
+                @if ($testimonial)
+                    <blockquote class="mt-6 text-[22px] font-medium leading-[32px] tracking-[-0.01em] text-azul-800 before:mb-5 before:block before:text-[72px] before:font-bold before:leading-[0.6] before:text-celeste-500 before:content-['“'] md:text-[30px] md:leading-[42px]">
+                        {{ $testimonial['quote'] }}
+                    </blockquote>
+                    <figcaption class="mt-6 flex items-center gap-4 text-texto-secundario">
+                        @if (filled($testimonial['photo'] ?? null))
+                            <img src="{{ asset($testimonial['photo']) }}" alt="" width="112" height="112" loading="lazy" decoding="async" class="h-14 w-14 shrink-0 rounded-full object-cover">
+                        @endif
+                        <span>
+                            @if (filled($testimonial['name'] ?? null))
+                                <span class="block font-bold text-azul-800">{{ $testimonial['name'] }}</span>
+                                <span class="block">{{ collect([$testimonial['role'] ?? null, $testimonial['company'] ?? null])->filter()->join(', ') }}</span>
+                            @else
+                                <span class="font-bold text-azul-800">{{ $testimonial['company'] }}</span> · {{ $testimonial['company_role'] ?? '' }}
+                            @endif
+                            @if (filled($testimonial['size'] ?? null))
+                                <span class="t-cuerpo-chico block">{{ $testimonial['size'] }}</span>
+                            @endif
+                        </span>
+                    </figcaption>
+                    @if (filled($testimonial['video_url'] ?? null))
+                        @include('partials.video', ['url' => $testimonial['video_url'], 'poster' => $testimonial['photo'] ?? config('landing.video_poster'), 'title' => 'Testimonio de '.$testimonial['company']])
+                    @endif
+                @endif
             </figure>
 
             <ul data-revelar class="rounded-xl border border-borde bg-white p-6 sm:p-8">
@@ -330,11 +379,15 @@
                     Cotizá por WhatsApp
                 </a>
             </div>
-            <dl class="mt-10 grid gap-x-12 gap-y-8 md:mt-12 md:grid-cols-2">
+            {{-- Más de 8 preguntas: desplegables nativos (<details>), accesibles con teclado y lector de pantalla --}}
+            <div class="mt-10 grid gap-x-12 md:mt-12 md:grid-cols-2">
                 @foreach ($faqs as $faq)
-                    <div data-revelar class="border-t-2 border-azul-800 pt-5">
-                        <dt class="t-titulo-3 text-azul-800">{{ $faq['q'] }}</dt>
-                        <dd class="mt-2 max-w-[62ch] text-texto-secundario">
+                    <details data-revelar class="pregunta border-t-2 border-azul-800">
+                        <summary class="t-titulo-3 flex cursor-pointer items-start justify-between gap-4 py-5 text-azul-800">
+                            {{ $faq['q'] }}
+                            <x-icon name="chevron-down" class="pregunta-icono mt-1 h-5 w-5 shrink-0 text-celeste-700" />
+                        </summary>
+                        <div class="max-w-[62ch] pb-6 text-texto-secundario">
                             {{ $faq['a'] }}
                             @if (!empty($faq['precios']))
                                 <a href="#precios" class="enlace">Ver precios.</a>
@@ -342,10 +395,10 @@
                             @if (!empty($faq['whatsapp']))
                                 <a href="{{ \App\Support\WhatsApp::url() }}" target="_blank" rel="noopener noreferrer" class="enlace">También podés escribirnos por WhatsApp.</a>
                             @endif
-                        </dd>
-                    </div>
+                        </div>
+                    </details>
                 @endforeach
-            </dl>
+            </div>
         </div>
     </section>
 
@@ -360,6 +413,7 @@
                 <a href="{{ route('contacto') }}" class="boton boton-claro" data-cta="demo">Pedí tu demo</a>
                 <a href="{{ \App\Support\Saas::signupUrl() }}" class="boton boton-borde-claro" data-cta="registro" data-registro>Probá 1 mes gratis</a>
             </div>
+            <p class="t-cuerpo-chico mt-3 text-azul-100">{{ $riesgo }}</p>
         </div>
     </section>
 @endsection

@@ -2,7 +2,6 @@
     $links = [
         ['label' => 'Funciones', 'href' => route('servicios')],
         ['label' => 'Cómo funciona', 'href' => route('home') . '#como-funciona'],
-        ['label' => 'Clientes', 'href' => route('home') . '#clientes'],
         // Solo si la home muestra precios (los datos del SaaS o el respaldo).
         app(\App\Services\PlanesPublicos::class)->datos() ? ['label' => 'Precios', 'href' => route('home') . '#precios'] : null,
         ['label' => 'Guías', 'href' => route('tutoriales')],

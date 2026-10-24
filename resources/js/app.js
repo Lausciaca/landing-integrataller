@@ -251,6 +251,24 @@ function initDemoForms() {
     });
 }
 
+// YouTube recién se carga al tocar el póster: la página no paga el peso del reproductor
+function initVideos() {
+    document.querySelectorAll('[data-video-youtube]').forEach((link) => {
+        link.addEventListener('click', (event) => {
+            if (event.metaKey || event.ctrlKey || event.shiftKey) return;
+            event.preventDefault();
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://www.youtube-nocookie.com/embed/${encodeURIComponent(link.dataset.videoYoutube)}?autoplay=1&rel=0`;
+            iframe.title = link.dataset.videoTitle || 'Video';
+            iframe.allow = 'autoplay; encrypted-media; picture-in-picture';
+            iframe.allowFullscreen = true;
+            iframe.className = 'aspect-video h-full w-full';
+            link.replaceWith(iframe);
+            iframe.focus();
+        });
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     initDemoDialog();
     initDemoForms();
@@ -259,4 +277,5 @@ document.addEventListener('DOMContentLoaded', () => {
     initScrollReveal();
     initRecorrido();
     initCalculadora();
+    initVideos();
 });

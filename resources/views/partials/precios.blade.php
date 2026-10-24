@@ -45,6 +45,8 @@
                         <span class="text-[44px] font-bold leading-[48px] tracking-[-0.02em] text-azul-800 tabular-nums md:text-[56px] md:leading-[60px]">{{ PlanesPublicos::pesos($pro['precio_final']) }}</span>
                         <span class="text-texto-secundario">por mes, final</span>
                     </p>
+                    {{-- TODO-CONFIRMAR: línea de confianza (config/landing.php, copy.pricing_trust_line) --}}
+                    <p class="t-cuerpo-chico mt-2 text-texto-secundario">{{ config('landing.copy.pricing_trust_line') }}</p>
                     @if ($precios['transferencia_descuento_pct'] > 0)
                         <p class="t-cuerpo-chico mt-2 font-medium text-exito">{{ $porcentaje($precios['transferencia_descuento_pct']) }}% menos pagando por transferencia</p>
                     @endif
@@ -118,7 +120,8 @@
                         <a href="{{ \App\Support\Saas::signupUrl() }}" class="boton boton-principal" data-cta="registro" data-registro>{{ $pruebaTexto ? 'Probá '.$pruebaTexto : 'Empezá ahora' }}</a>
                         <a href="{{ route('contacto') }}" class="boton boton-secundario" data-cta="demo">Pedí tu demo</a>
                     </div>
-                    <p class="t-cuerpo-chico mt-4 text-texto-secundario">{{ config('landing.copy.pricing_trust_line') }}</p>
+                    {{-- TODO-CONFIRMAR: "Sin permanencia" (config/landing.php, copy.risk_reversal) --}}
+                    <p class="t-cuerpo-chico mt-4 text-texto-secundario">{{ config('landing.copy.risk_reversal') }}</p>
                 </div>
             </div>
         </div>

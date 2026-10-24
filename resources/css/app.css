@@ -522,6 +522,23 @@
         background: var(--color-azul-700);
     }
 
+    /* Preguntas frecuentes desplegables (<details>) */
+    .pregunta > summary {
+        list-style: none;
+    }
+
+    .pregunta > summary::-webkit-details-marker {
+        display: none;
+    }
+
+    .pregunta-icono {
+        transition: transform 200ms ease;
+    }
+
+    .pregunta[open] .pregunta-icono {
+        transform: rotate(180deg);
+    }
+
     /* Marco de celular para las capturas del sistema (sin imágenes de marcas de terceros) */
     .telefono {
         position: relative;
