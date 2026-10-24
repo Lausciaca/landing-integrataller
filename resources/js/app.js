@@ -95,11 +95,59 @@ function initRecorrido() {
     window.addEventListener('resize', onScroll);
 }
 
+// Borrador del diálogo: si se cierra sin enviar, lo escrito vuelve al reabrirlo (solo en esta pestaña).
+const BORRADOR_KEY = 'it_demo_borrador';
+
+function guardarBorrador(form) {
+    try {
+        const datos = {
+            name: form.elements.name?.value || '',
+            phone: form.elements.phone?.value || '',
+            branches: form.querySelector('input[name="branches"]:checked')?.value || '',
+        };
+        if (Object.values(datos).some((valor) => valor.trim() !== '')) {
+            window.sessionStorage.setItem(BORRADOR_KEY, JSON.stringify(datos));
+        } else {
+            window.sessionStorage.removeItem(BORRADOR_KEY);
+        }
+    } catch {
+        // Almacenamiento bloqueado: no hay borrador.
+    }
+}
+
+function restaurarBorrador(form) {
+    try {
+        const datos = JSON.parse(window.sessionStorage.getItem(BORRADOR_KEY) || 'null');
+        if (!datos) return;
+        ['name', 'phone'].forEach((campo) => {
+            if (form.elements[campo] && !form.elements[campo].value && typeof datos[campo] === 'string') form.elements[campo].value = datos[campo];
+        });
+        const opcion = form.querySelector(`input[name="branches"][value="${CSS.escape(String(datos.branches || ''))}"]`);
+        if (opcion && !form.querySelector('input[name="branches"]:checked')) opcion.checked = true;
+    } catch {
+        // Borrador ilegible o almacenamiento bloqueado.
+    }
+}
+
+function borrarBorrador() {
+    try {
+        window.sessionStorage.removeItem(BORRADOR_KEY);
+    } catch {
+        // Almacenamiento bloqueado.
+    }
+}
+
+function formularioVacio(form) {
+    const escrito = ['name', 'phone'].some((campo) => (form?.elements[campo]?.value || '').trim() !== '');
+    return !escrito && !form?.querySelector('input[name="branches"]:checked');
+}
+
 // "Pedí tu demo" abre el formulario corto en la misma pantalla. Sin <dialog>, el enlace sigue a /contacto.
 function initDemoDialog() {
     const dialog = document.querySelector('[data-demo-dialog]');
     if (!dialog || typeof dialog.showModal !== 'function') return;
 
+    const form = dialog.querySelector('[data-demo-form]');
     let opener = null;
 
     document.addEventListener('click', (event) => {
@@ -108,6 +156,7 @@ function initDemoDialog() {
 
         event.preventDefault();
         opener = link;
+        if (form) restaurarBorrador(form);
         dialog.showModal();
         document.documentElement.classList.add('dialogo-abierto');
         // En el celular no se abre el teclado de entrada: primero se ve el formulario completo
@@ -116,11 +165,12 @@ function initDemoDialog() {
 
     dialog.addEventListener('close', () => {
         document.documentElement.classList.remove('dialogo-abierto');
+        if (form && !form.dataset.enviado) guardarBorrador(form);
         opener?.focus({ preventScroll: true });
     });
-    // Tocar el fondo oscuro cierra
+    // Tocar el fondo oscuro cierra solo si no hay nada escrito (la X y Escape cierran siempre)
     dialog.addEventListener('click', (event) => {
-        if (event.target === dialog) dialog.close();
+        if (event.target === dialog && formularioVacio(form)) dialog.close();
     });
     dialog.querySelectorAll('[data-dialog-close]').forEach((button) => button.addEventListener('click', () => dialog.close()));
 }
@@ -187,6 +237,8 @@ function initDemoForms() {
 
             const data = await response.json().catch(() => ({}));
             if (response.ok) {
+                form.dataset.enviado = '1';
+                borrarBorrador();
                 window.location.assign(data.redirect || '/demo/solicitada');
             } else if (response.status === 422 && data.errors) {
                 setSending(false);

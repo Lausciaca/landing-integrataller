@@ -91,6 +91,12 @@ class LandingTest extends TestCase
         $this->assertStringContainsString('¿Preferís empezar solo?', $html);
     }
 
+    public function test_demo_form_submit_says_whatsapp_while_openers_say_pedi_tu_demo(): void
+    {
+        $this->get('/')->assertSee('data-cta="demo-enviar" data-submit>Quiero mi demo por WhatsApp</button>', false);
+        $this->get('/contacto')->assertSee('data-cta="demo-enviar" data-submit>Quiero mi demo por WhatsApp</button>', false);
+    }
+
     public function test_closing_block_on_inner_pages_offers_both_buttons(): void
     {
         $this->get('/servicios')->assertOk()

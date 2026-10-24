@@ -58,7 +58,7 @@
         </p>
     </div>
 
-    <button type="submit" class="boton boton-principal w-full" data-cta="demo-enviar" data-submit>Pedí tu demo</button>
+    <button type="submit" class="boton boton-principal w-full" data-cta="demo-enviar" data-submit>Quiero mi demo por WhatsApp</button>
 
     <p class="t-cuerpo-chico text-texto-secundario">
         Te escribimos por WhatsApp para coordinarla. Usamos tus datos solo para eso: <a href="{{ route('privacidad') }}" class="enlace">política de privacidad</a>.
